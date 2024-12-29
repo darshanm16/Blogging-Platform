@@ -1,0 +1,149 @@
+header {
+  background-color: #6c5ce7;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.blog-container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px 30px;
+  background: white;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.blog-container:hover {
+  transform: scale(1.01);
+}
+
+.blog-title {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.blog-content {
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.interaction-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.like-button {
+  background-color: #ff7675;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.like-button:hover {
+  background-color: #d63031;
+}
+
+.comment-section {
+  margin-top: 20px;
+}
+
+.comment-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.comment-box textarea {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+.comment-box button {
+  padding: 10px;
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100px;
+}
+
+.comment-box button:hover {
+  background-color: #4834d4;
+}
+
+.comments {
+  list-style: none;
+  padding: 0;
+  display: none;
+}
+
+.comments li {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.comments li:hover {
+  background-color: #e8e8e8;
+}
+
+@media (max-width: 768px) {
+  .blog-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .blog-title {
+    font-size: 1.5em;
+  }
+
+  .like-button {
+    padding: 6px 12px;
+  }
+
+  .comment-box button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    font-size: 1.2em;
+  }
+
+  .blog-title {
+    font-size: 1.2em;
+  }
+
+  .interaction-bar {
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+.span {
+  font-size: 16px;
+  color: gray;
+  font-weight: 500;
+}

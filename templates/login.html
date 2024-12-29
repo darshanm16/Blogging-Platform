@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="\static\signin.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form form--login">
+        <div class="form--heading" >Welcome back!</div>
+        <form method="POST" action="">
+          {% csrf_token %}
+          <input type="text" placeholder="Name" name="username" />
+          <input type="password" placeholder="Password" name="password" />
+          <button class="button" type="submit">Login</button>
+        </form> 
+        {% if messages %} {% for message in messages %}
+        <div class="" role="alert">
+          <strong style="color: red;">{{ message }}</strong>
+        </div>
+        {% endfor %} {% endif %}
+      </div>
+      <a href="#" class="toggle-button1">Forgot password?</a>
+      <a href="/signup" class="toggle-button">Don't have an account?</a>
+    </div>
+  </body>
+</html>

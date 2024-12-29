@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block title %} Post Blog {% endblock title %} 
+
+{% block css %}
+    <link rel="stylesheet" href="\static\maincss.css" />
+
+{% endblock css %}
+
+{% block body %}
+
+  <div class="form-container">
+    <h1>Write Your Blog</h1>
+    <form action="" method="POST" class="blog-form">
+      {% csrf_token %}
+      <label for="name">Title:</label>
+      <input type="text" name="title" id="name" required />
+
+      <label for="desc">Content:</label>
+      <textarea name="content" rows="10" id="desc" required></textarea>
+
+      <div class="form-buttons">
+        <input type="submit" value="Post" id="postbtn" />
+        <input type="reset" value="Clear" />
+      </div>
+    </form>
+  </div>
+
+{% endblock body %}

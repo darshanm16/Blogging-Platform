@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="\static\signin.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form form--signup active">
+        <div class="form--heading">Blogger Sign Up</div>
+        <form method="POST">
+          {% csrf_token %}
+          <input type="text" name="username" placeholder="Username" />
+          <input type="email" name="email" placeholder="Email" />
+          <input type="password" name="password" placeholder="Password" />
+          <button class="button" type="submit">Sign Up</button>
+        </form>
+        {% if messages %} {% for message in messages %}
+        <div class="" role="alert">
+          <strong style="color: red;">{{ message }}</strong>
+        </div>
+        {% endfor %} {% endif %}
+      </div>
+      <a href="/" class="toggle-button">Already have an account?</a>
+    </div>
+  </body>
+</html>

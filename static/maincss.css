@@ -1,0 +1,194 @@
+/* General body styles */
+main {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center the form container */
+.form-container {
+  width: 90%;
+  max-width: 600px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+/* Heading styles */
+h1, .blogs-title {
+  text-align: center;
+  color: #444;
+  font-size: 2rem;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Centered input and textarea */
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Focus effect for input and textarea */
+input[type="text"]:focus,
+textarea:focus {
+  border-color: black;
+  box-shadow: 0 0 8px rgba(92, 103, 242, 0.2);
+  outline: none;
+}
+
+/* Form buttons */
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+#postbtn,
+input[type="reset"] {
+  background-color: #5c67f2;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#postbtn:hover {
+  background-color: #4a54e1;
+  transform: translateY(-2px);
+}
+
+input[type="reset"] {
+  background-color: #ff5e5e;
+}
+
+input[type="reset"]:hover {
+  background-color: #e04c4c;
+  transform: translateY(-2px);
+}
+
+/* Blogs Section */
+.blogs-title {
+  margin-top: 40px;
+}
+
+/* Container for blogs */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Responsive: Switch to 1 column on smaller screens */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Blog card */
+.card {
+  background: #fff;
+  padding: 25px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Blog title */
+.blog-title {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+/* Button group for Like and Show Comments */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+/* Like button */
+.like-btn,
+.show-comments-btn {
+  background-color: #5c67f2;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.like-btn:hover,
+.show-comments-btn:hover {
+  background-color: #4a54e1;
+  transform: translateY(-2px);
+}
+
+/* Comment section */
+.comment-section {
+  margin-top: 20px;
+  display: none;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 10px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.comment-form textarea:focus {
+  border-color: #5c67f2;
+  box-shadow: 0 0 8px rgba(92, 103, 242, 0.2);
+  outline: none;
+}
+
+.comment-btn {
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.comment-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}

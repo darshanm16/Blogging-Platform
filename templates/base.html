@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>{% block title %} {% endblock title %} | Blogger</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      target="_blank"
+      href="\static\nav.css"
+    />
+    {% block css %} {% endblock css %}
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <img src="\static\logo.png" alt="logo" />
+        <h1>BLOGGER</h1>
+      </div>
+      <ul>
+        <li>
+          <a href="/index">Home</a>
+        </li>
+        <li>
+          <a href="/profile">Profile</a>
+        </li>
+        <li>
+          <a href="/writeblog">Write Blog</a>
+        </li>
+        <li>
+          <a href="/contact">Contact Us</a>
+        </li>
+      </ul>
+      <div class="hamburger">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </nav>
+    <div class="menubar">
+      <ul>
+        <li>
+          <a href="/index">Home</a>
+        </li>
+        <li>
+          <a href="/profile">Profile</a>
+        </li>
+        <li>
+          <a href="/writeblog">Write Blog</a>
+        </li>
+        <li>
+          <a href="/contact">Contact Us</a>
+        </li>
+      </ul>
+    </div>
+
+    {% if messages %} {% for message in messages %}
+
+    <label>
+      <input type="checkbox" class="alertCheckbox" autocomplete="off" />
+      <div class="alert success">
+        <span class="alertClose">X</span>
+        <span class="alertText"
+          >{{ message }}<br class="clear"
+        /></span>
+      </div>
+    </label>
+
+    {% endfor %} {% endif %} {% block body %} {% endblock body %}
+
+    <script src="\static\nav.js"></script>
+    {% block js %}
+      
+    {% endblock js %}
+  </body>
+</html>

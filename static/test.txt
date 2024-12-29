@@ -1,0 +1,1 @@
+this is my text static file which is only for the sake of test.

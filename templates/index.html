@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block body %} {% block css %}
+<link rel="stylesheet" href="\static\index.css" />
+{% endblock css %}
+
+<main>
+  <h1 style="text-align: center">Exclusive Blogs</h1>
+  {% for blog in blogs %}
+  <div class="blog-container">
+    <h3 class="blog-title">
+      {{ blog.title }} <span class="span">by {{blog.user_name}}</span>
+    </h3>
+    <hr />
+    <p class="blog-content" style="text-align: justify">
+      {{ blog.content|linebreaksbr }}
+    </p>
+    <hr />
+    <div class="interaction-bar">
+      <button class="like-button" onclick="handleLike()">
+        <span>&#x2764;</span> Like <span id="like-count">0</span>
+      </button>
+      <button class="like-button" onclick="toggleComments()">
+        Read Comments
+      </button>
+    </div>
+
+    <div class="comment-section">
+      <div class="comment-box">
+        <textarea
+          id="comment-input"
+          rows="2"
+          placeholder="Write a comment..."
+        ></textarea>
+        <button onclick="addComment()">Post</button>
+      </div>
+      <ul class="comments" id="comments-list">
+        <li>hello</li>
+        <li>hello</li>
+        <li>hello</li>
+        <li>hello</li>
+        <li>hello</li>
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</main>
+
+{% block js %}
+<script src="\static\index.js"></script>
+{% endblock js %} {% endblock body %} {% block title %} Home {% endblock title %}
