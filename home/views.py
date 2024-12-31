@@ -47,7 +47,7 @@ def logout_user(request):
 
 def index(request):
     if isinstance(request.user, AnonymousUser):
-        return HttpResponse("<h1>Your Restricted!</h1>")
+        return redirect(login_user)
     
     data=Blogs.objects.exclude(user_name=request.user).values()
     serializer=BlogSerializer(data,many=True)
@@ -58,7 +58,7 @@ def index(request):
 
 def profile(request):
     if isinstance(request.user, AnonymousUser):
-        return HttpResponse("<h1>Your Restricted!</h1>")
+        return redirect(login_user)
     
     data=Blogs.objects.filter(user_name=request.user).values()
     serializer=BlogSerializer(data,many=True)
@@ -69,7 +69,7 @@ def profile(request):
 
 def writeblog(request):
     if isinstance(request.user, AnonymousUser):
-        return HttpResponse("<h1>Your Restricted!</h1>")
+        return redirect(login_user)
     if request.method=="POST":
         user_name =request.user
         title =request.POST.get('title')
