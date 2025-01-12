@@ -8,5 +8,7 @@ urlpatterns = [
     path("profile/",views.profile,name="Profile"),
     path("logout/",views.logout_user,name="Profile"),
     path("writeblog/",views.writeblog,name="WriteBlog"),
-    path("contact/",views.contact,name="ContactUs")
+    path("contact/",views.contact,name="ContactUs"),
+    
+    path('signup/verifyotp', views.verify_otp, name='form_otp_api'),
 ]

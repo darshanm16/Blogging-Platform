@@ -136,3 +136,13 @@ input:focus {
 	font-weight: 300;
 	letter-spacing: 1px;
 }
+
+#fullname{
+  width: 100%;
+  margin: 0;
+  display: flex;
+}
+
+#fullname input{
+  margin: 10px;
+}

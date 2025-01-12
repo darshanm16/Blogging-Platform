@@ -1,30 +1,72 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="\static\signin.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="form form--signup active">
-        <div class="form--heading">Blogger Sign Up</div>
-        <form method="POST">
-          {% csrf_token %}
-          <input type="text" name="username" placeholder="Username" />
-          <input type="email" name="email" placeholder="Email" />
-          <input type="password" name="password" placeholder="Password" />
-          <button class="button" type="submit">Sign Up</button>
-        </form>
-        {% if messages %} {% for message in messages %}
-        <div class="" role="alert">
-          <strong style="color: red;">{{ message }}</strong>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Page with OTP</title>
+  <link rel="stylesheet" href="{% static 'signup.css' %}">
+</head>
+
+<body>
+  <div class="container">
+    <h2>Blogger Sign Up</h2>
+    <form id="combinedForm" method="POST">
+      {% csrf_token %}
+      <div id="signupFields">
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="firstName" name="fname" placeholder="First Name" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="lastName" name="lname" placeholder="Last Name" required>
+          </div>
         </div>
-        {% endfor %} {% endif %}
+        <div class="form-group">
+          <input type="text" id="username" name="username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn" id="proceedToOTP">Sign Up</button>
       </div>
-      <a href="/" class="toggle-button">Already have an account?</a>
+
+    </form>
+    <p>
+      Already have an account? <a href="/" id="loginLink">Login</a>
+    </p>
+    {% if messages %}
+    {% for message in messages %}
+    <div role="alert" style="text-align: center;">
+      <strong style="color: red;">{{ message }}</strong>
     </div>
-  </body>
+    {% endfor %}
+    {% endif %}
+  </div>
+
+  <script>
+    const proceedToOTP = document.getElementById('proceedToOTP');
+
+    proceedToOTP.addEventListener('click', function () {
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (!firstName || !lastName || !email || !password || !username) {
+        alert('All fields are required.');
+        return;
+      }
+
+    });
+
+  </script>
+
+</body>
+
 </html>
