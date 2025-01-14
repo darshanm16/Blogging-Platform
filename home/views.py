@@ -13,6 +13,63 @@ import random,json
 from django.contrib.auth.hashers import make_password
 
 
+def resetpassword(request):
+    if request.method == "POST":
+        form_otp=request.POST.get('formotp')
+        stored_otp=request.session.get('loginotp')
+        if form_otp and stored_otp and int(form_otp) == int(stored_otp):
+            user=User.objects.get(email=request.session.get('resetemail'))
+            login(request,user)
+            del request.session['loginotp']
+            del request.session['resetemail']
+            return redirect(profile)
+        else:
+            messages.error(request, 'Invalid OTP! Please try again.')
+            return redirect(sendcode) 
+
+def sendcode(request):
+    if request.method == "POST":
+        email = request.POST.get('resetEmail')
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            loginotp = random.randint(100000, 999999)
+            subject = 'Your Security Code for Login'
+            message = f"""
+Dear {user.first_name},
+
+Your security code is: {loginotp}
+
+Please use this code to complete your login process.
+
+Important Security Tips:
+-Do not share this code with anyone.
+-If you did not request this code, please contact our support team immediately.
+
+For any assistance, feel free to reach out to us at {EMAIL_HOST_USER} or {9482216949}.
+
+Thank you,
+The Blogger Team
+
+"""
+            send_mail(
+                subject,
+                message,
+                EMAIL_HOST_USER,
+                [email],
+                fail_silently=True,
+            )
+            request.session['resetemail'] = email
+            request.session['loginotp'] = loginotp
+            
+            messages.success(request, 'OTP sent to your email')
+            return redirect(sendcode)
+    
+        else:
+            messages.error(request, 'No user found!')
+            return redirect(sendcode)
+    return render(request,'sendcode.html')
+    
+
 def verify_otp(request):
     if request.method == "POST":
         entered_otp = request.POST.get('otp')
@@ -29,12 +86,13 @@ def verify_otp(request):
             )
             login(request,user)
             send_welcome_email(user=user)
-            messages.success(request, 'Signup successful!')
+            messages.success(request, 'Signup successful! check your mail for confirmation')
             return redirect(profile)
         else:
-            messages.error(request, 'Invalid OTP. Please try again.')
+            messages.error(request, 'Invalid OTP! Please try again.')
             return redirect(verify_otp)
     return render(request,'verify_signup.html')
+
 
 def verify_signup(request,firstname,lastname,username,email,password):
     otp=random.randint(100000,999999)
@@ -110,6 +168,7 @@ def login_user(request):
 
 
 def logout_user(request):
+    request.session.flush()
     logout(request)
     return redirect(login_user)
 

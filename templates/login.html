@@ -1,30 +1,58 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link rel="stylesheet" href="\static\signin.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="form form--login">
-        <div class="form--heading" >Welcome back!</div>
-        <form method="POST" action="">
-          {% csrf_token %}
-          <input type="text" placeholder="Name" name="username" />
-          <input type="password" placeholder="Password" name="password" />
-          <button class="button" type="submit">Login</button>
-        </form> 
-        {% if messages %} {% for message in messages %}
-        <div class="" role="alert">
-          <strong style="color: red;">{{ message }}</strong>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page with Forgot Password</title>
+  <link rel="stylesheet" href="\static\signin.css">
+</head>
+
+<body>
+  <div class="container" id="loginContainer">
+    <!-- Login Form -->
+    <div id="loginForm">
+      <h2>Blogger Login</h2>
+      <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="text" id="username" name="username" placeholder="Username" required>
         </div>
-        {% endfor %} {% endif %}
+        <div class="form-group">
+          <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+        <button type="submit" id="loginsubmit" class="btn">Login</button>
+      </form>
+      {% if messages %} {% for message in messages %}
+      <div class="" role="alert">
+        <strong style="color: red;">{{ message }}</strong>
       </div>
-      <a href="/forgetpassword" class="toggle-button1">Forgot password?</a>
-      <a href="/signup" class="toggle-button">Don't have an account?</a>
+      {% endfor %} {% endif %}
+      <p>
+        <a href="/sendlink" id="forgotPasswordLink">Forgot your password?</a>
+      </p>
+      <p>
+        Don't have an account? <a href="/signup" id="signupLink">Sign up</a>
+      </p>
     </div>
-  </body>
+
+
+  </div>
+
+  <script>
+    const loginsubmit = document.getElementById('loginsubmit');
+
+    loginsubmit.addEventListener('click', function () {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        alert('Please fill the details.');
+        return;
+      }
+    });
+  </script>
+</body>
+
 </html>

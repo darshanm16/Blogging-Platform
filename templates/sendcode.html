@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="\static\signin.css">
+</head>
+
+<body>
+    <div class="container" id="loginContainer">
+        <!-- Forgot Password Form -->
+        <div id="forgotPasswordForm" class="hidden">
+            <h2>Forgot Password?</h2>
+            <p>Enter your email to receive a security code to login</p>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="email" id="resetEmail" name="resetEmail" placeholder="Email" required>
+                </div>
+                <button type="submit" class="btn" id="sendResetLink">Send Code</button>
+            </form>
+
+            <form method="POST" action="verifyotp/">
+                {% csrf_token %}
+                <div class="form-group" style="Display: flex;margin-top:15px;gap:10px;">
+                    <input type="text" id="formotp" name="formotp" placeholder="Security Code" style="width: 200%;" required>
+                    <button type="submit" class="btn" id="backToLogin"
+                        style="background-color: #29ae00;">Login</button>
+                </div>
+            </form>
+
+            {% if messages %} {% for message in messages %}
+            <div class="" role="alert" style="text-align: center;">
+                <strong style="color: red;">{{ message }}</strong>
+            </div>
+            {% endfor %} {% endif %}
+
+            <p>
+                <a href="/" id="signupLink">Back toLogin</a>
+            </p>
+        </div>
+
+    </div>
+    <script>
+        const sendResetLink = document.getElementById('sendResetLink');
+
+        sendResetLink.addEventListener('click', function () {
+            const email = document.getElementById('resetEmail').value;
+
+            if (!email) {
+                alert('Please enter your email.');
+                return;
+            }
+
+        });
+
+    </script>
+</body>
+
+</html>
