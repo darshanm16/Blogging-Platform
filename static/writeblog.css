@@ -43,6 +43,7 @@ textarea {
   font-size: 1rem;
   box-sizing: border-box;
   transition: border-color 0.3s, box-shadow 0.3s;
+  resize: none;
 }
 
 /* Focus effect for input and textarea */
@@ -212,7 +213,7 @@ input[type="reset"]:hover {
   display: -ms-flexbox;
   display: flex;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 15px;
   position: relative;
   -webkit-user-select: none;
@@ -230,27 +231,27 @@ input[type="reset"]:hover {
 .checkbox-wrapper-35 .switch + label::before {
   background-color: #09ff00;
   border-radius: 500px;
-  height: 15px;
+  height: 19px;
   margin-right: 8px;
   -webkit-transition: background-color 0.125s ease-out;
   transition: background-color 0.125s ease-out;
-  width: 25px;
+  width: 30px;
 }
 
 .checkbox-wrapper-35 .switch + label::after {
   background-color: #fff;
-  border-radius: 13px;
+  border-radius: 40px;
   box-shadow: 0 3px 1px 0 rgba(37, 34, 71, 0.05),
     0 2px 2px 0 rgba(37, 34, 71, 0.1), 0 3px 3px 0 rgba(37, 34, 71, 0.05);
-  height: 13px;
-  left: 1px;
+  height: 16px;
+  left: 2px;
   position: absolute;
   top: 1px;
   -webkit-transition: -webkit-transform 0.125s ease-out;
   transition: -webkit-transform 0.125s ease-out;
   transition: transform 0.125s ease-out;
   transition: transform 0.125s ease-out, -webkit-transform 0.125s ease-out;
-  width: 13px;
+  width: 16px;
 }
 
 .checkbox-wrapper-35 .switch + label .switch-x-text {
