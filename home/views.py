@@ -174,7 +174,7 @@ def index(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)
     
-    data=Blogs.objects.exclude(user_name=request.user).values()
+    data=Blogs.objects.exclude(user_name=request.user).order_by('?').values()
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
     
@@ -201,7 +201,12 @@ def writeblog(request):
         user_name =request.user
         title =request.POST.get('title')
         content =request.POST.get('content')  
-        
+        check =request.POST.get('ananymous')  
+        if check=='True':
+            blog=Blogs(user_name=user_name,title=title,content=content,date=datetime.today(),ananymous=True)     
+            blog.save()
+            messages.success(request, "Posted Successfully!")
+            return redirect(writeblog)
         blog=Blogs(user_name=user_name,title=title,content=content,date=datetime.today())     
         blog.save()
         messages.success(request, "Posted Successfully!")

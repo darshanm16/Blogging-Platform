@@ -1,27 +1,39 @@
-{% extends "base.html" %} {% block title %} Post Blog {% endblock title %} 
+{% extends "base.html" %} {% block title %} Post Blog {% endblock title %}
 
 {% block css %}
-    <link rel="stylesheet" href="\static\writeblog.css" />
+<link rel="stylesheet" href="\static\writeblog.css" />
 
 {% endblock css %}
 
 {% block body %}
 
-  <div class="form-container">
-    <h1>Write Your Blog</h1>
-    <form action="" method="POST" class="blog-form">
-      {% csrf_token %}
-      <label for="name">Title:</label>
-      <input type="text" name="title" id="name" required />
+<div class="form-container">
+  <h1>Write Your Blog</h1>
+  <form action="" method="POST" class="blog-form">
+    {% csrf_token %}
+    <label for="name">Title:</label>
+    <input type="text" name="title" id="name" required />
 
-      <label for="desc">Content:</label>
-      <textarea name="content" rows="10" id="desc" required></textarea>
+    <label for="desc">Content:</label>
+    <textarea name="content" rows="10" id="desc" required></textarea>
 
-      <div class="form-buttons">
-        <input type="submit" value="Post" id="postbtn" />
-        <input type="reset" value="Clear" />
-      </div>
-    </form>
-  </div>
+    
+    <div class="checkbox-wrapper-35">
+      <input class="switch" type="checkbox" id="switch" name="ananymous" value="True">
+      <label for="switch">
+        <span class="switch-x-text">Post</span>
+        <span class="switch-x-toggletext">
+          <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Publicly</span>
+          <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>Ananymously</span>
+        </span>
+      </label>
+    </div>
+    
+    <div class="form-buttons">
+      <input type="submit" value="Post" id="postbtn" />
+      <input type="reset" value="Clear" />
+    </div>
+  </form>
+</div>
 
 {% endblock body %}

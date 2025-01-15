@@ -7,7 +7,12 @@
   {% for blog in blogs %}
   <div class="blog-container">
     <h3 class="blog-title">
-      {{ blog.title }} <span class="span">by {{blog.user_name}}</span>
+      {{ blog.title }}
+      {% if blog.ananymous %}
+      <span class="span">by Ananymous User</span>
+      {% else %}
+      <span class="span">by {{blog.user_name}}</span>
+      {% endif %}
     </h3>
     <hr />
     <p class="blog-content" style="text-align: justify">
@@ -25,11 +30,7 @@
 
     <div class="comment-section">
       <div class="comment-box">
-        <textarea
-          id="comment-input"
-          rows="2"
-          placeholder="Write a comment..."
-        ></textarea>
+        <textarea id="comment-input" rows="2" placeholder="Write a comment..."></textarea>
         <button onclick="addComment()">Post</button>
       </div>
       <ul class="comments" id="comments-list">

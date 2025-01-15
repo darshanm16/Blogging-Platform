@@ -7,6 +7,7 @@ class Blogs(models.Model):
     title=models.CharField(max_length=100)
     content =models.TextField(max_length=10000)
     date =models.DateField()
+    ananymous=models.BooleanField(default=False)
     
     def __str__(self):
         return self.user_name
