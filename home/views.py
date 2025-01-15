@@ -5,8 +5,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import AnonymousUser,User
 from .serializers import BlogSerializer
-
-# Create your views here.
 from django.core.mail import send_mail
 from hello.settings import EMAIL_HOST_USER
 import random,json
@@ -131,7 +129,6 @@ The Blogger Team
 
     request.session['otp'] = otp
 
-    # Render the page to prompt the user for OTP input
     return render(request, 'verify_signup.html')
     
 def signup(request):
@@ -187,10 +184,12 @@ def index(request):
 def profile(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)
-    
     data=Blogs.objects.filter(user_name=request.user).values()
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
+    
+    if str(request.user)=="admin":
+        return render(request,'adminpage.html',{'blogs': d})
 
     return render(request,'profile.html',{'blogs': d})
 
@@ -210,7 +209,7 @@ def writeblog(request):
     return render(request,'writeblog.html')
 
 def contact(request):
-    return redirect(index)
+    return render(request,'contact.html')
 
 
 def send_welcome_email(user):

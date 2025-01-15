@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block title %} Profile {% endblock title %}
+{% block css %}
+<link rel="stylesheet" href="/static/profilestyle.css" />
+{% endblock css %} {% block body %}
+
+<main>
+    <div class="container">
+        <div class="header">
+            <h1>@{{request.user}}</h1>
+        </div>
+        <div class="profile-info" id="profileInfo">
+            <p>
+                <strong>Name:</strong>
+                <span id="profileName">{{request.user.get_full_name}}</span>
+            </p>
+            <p>
+                <strong>Email:</strong>
+                <span id="profileEmail">{{request.user.email}}</span>
+            </p>
+            <p>
+                <span id="profileBio">Passionate web developer and tech enthusiast. Love creating beautiful
+                    and functional web pages.</span>
+            </p>
+            <div class="forms">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <button type="button">Edit Profile</button>
+                </form>
+                <form action="/admin/" method="post">
+                    {% csrf_token %}
+                    <button type="submit" style="background-color: #7d009f;">Go to Admin Page</button>
+                </form>
+                
+                <form action="/logout/" method="post">
+                    {% csrf_token %}
+                    <button style="background-color: #f44336" type="submit">
+                        Log Out
+                    </button>
+                </form>
+            </div>
+        </div>
+        <h2>Blogs Posted</h2>
+        <div class="blogs">
+            {% for blog in blogs %}
+
+            <div class="blog-item">
+                <div>
+                    <h3>{{blog.title}}</h3>
+                    <small>Posted on: {{blog.date}}</small>
+                    <hr />
+                    <p style="text-align: justify">{{blog.content|linebreaksbr}}</p>
+                </div>
+                <hr />
+                <button>Delete</button>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+{% endblock body %}

@@ -5,7 +5,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page with Forgot Password</title>
+  <title>Login | Blogger</title>
+  <link rel="shortcut icon" href="\static\icon.png" type="image/x-icon">
   <link rel="stylesheet" href="\static\signin.css">
 </head>
 
@@ -25,7 +26,7 @@
         <button type="submit" id="loginsubmit" class="btn">Login</button>
       </form>
       {% if messages %} {% for message in messages %}
-      <div class="" role="alert">
+      <div class="" role="alert" style="text-align: center;margin-top:15px;">
         <strong style="color: red;">{{ message }}</strong>
       </div>
       {% endfor %} {% endif %}
