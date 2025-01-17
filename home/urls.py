@@ -10,7 +10,11 @@ urlpatterns = [
     path('signup/verifyotp', views.verify_otp, name='VerifyOTP'),
     
     path("index/",views.index,name="Home"),
+    
     path("profile/",views.profile,name="Profile"),
+    path("profile/modify-blog/",views.modifyBlog,name="Delete Blog"),
+    
+    
     path("logout/",views.logout_user,name="Logout"),
     path("writeblog/",views.writeblog,name="WriteBlog"),
     path("contact/",views.contact,name="ContactUs"),

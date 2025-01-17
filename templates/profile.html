@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %} Profile {% endblock title %} 
+{% extends "base.html" %} {% block title %} Profile {% endblock title %}
 {% block css %}
 <link rel="stylesheet" href="/static/profilestyle.css" />
 {% endblock css %} {% block body %}
@@ -18,10 +18,8 @@
         <span id="profileEmail">{{request.user.email}}</span>
       </p>
       <p>
-        <span id="profileBio"
-          >Passionate web developer and tech enthusiast. Love creating beautiful
-          and functional web pages.</span
-        >
+        <span id="profileBio">Passionate web developer and tech enthusiast. Love creating beautiful
+          and functional web pages.</span>
       </p>
       <div class="forms">
         <form action="" method="post">
@@ -37,18 +35,42 @@
       </div>
     </div>
     <h2>Blogs Posted</h2>
+
+    <div id="confirm" style="visibility: hidden;">
+      <p class="span">are you sure you want to delete?</p>
+      <div class="conbtn">
+        <button type="button" id="cancel" class="confirmbtn" style="background-color: #f44336;">Cancel</button>
+        <button type="button" id="yes" class="confirmbtn" style="background-color: #45a049;">Yes</button>
+      </div>
+    </div>
+
     <div class="blogs">
       {% for blog in blogs %}
 
       <div class="blog-item">
         <div>
-          <h3>{{blog.title}}</h3>
-          <small>Posted on: {{blog.date}}</small>
+          <div id="blog-header" style="display: flex; justify-content: space-between;">
+            <div class="name">
+              <h3>{{blog.title}}</h3>
+              <small>Posted on: {{blog.date}}</small>
+            </div>
+
+
+            <div class="dropdown">
+              <a class="button">
+                <img src="\static\burger.png" alt="Menu" style="width: 30px; height: 20px;">
+              </a>
+              <ul>
+                <li><a onclick="deleteblog('{{blog.id}}')">Delete blog</a></li>
+                <li><a>Edit blog</a></li>
+              </ul>
+            </div>
+
+
+          </div>
           <hr />
           <p style="text-align: justify">{{blog.content|linebreaksbr}}</p>
         </div>
-        <hr />
-        <button>Delete</button>
       </div>
 
       {% endfor %}
@@ -57,3 +79,43 @@
 </main>
 
 {% endblock body %}
+
+{% block js %}
+
+<script>
+  function deleteblog(id) {
+    var con = document.getElementById('confirm');
+    con.style.visibility = "visible";
+    document.getElementById('cancel').onclick = function () {
+      con.style.visibility = "hidden";
+    };
+
+    document.getElementById('yes').onclick = function () {
+      con.style.visibility = "hidden";
+      fetch(`/profile/modify-blog/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id })
+      })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            alert('Failed to delete the blog.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while deleting the blog.');
+        });
+    };
+
+  }
+
+
+
+</script>
+
+{% endblock js %}

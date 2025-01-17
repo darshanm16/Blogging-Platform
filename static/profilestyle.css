@@ -103,3 +103,95 @@ h2 {
 .blog-item button:hover {
   background-color: #e53935;
 }
+
+#confirm {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #e2e2e2;
+  padding: 40px 20px;
+  font-size: 16px;
+  width: 300px;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: 0 0px 100px rgba(0, 0, 0, 0.1);
+}
+.span {
+  font-weight: 600;
+}
+.confirmbtn {
+  color: #dcdcdc;
+  cursor: pointer;
+  border: 0;
+  padding: 7px 10px;
+  border-radius: 5px;
+  width: 80px;
+  font-size: 16px;
+}
+.conbtn {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#appear {
+  background-color: #333;
+}
+
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.button {
+  color: white;
+  padding: 0 20px;
+  padding-top: 10px;
+  text-decoration: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+/* Dropdown menu styles */
+.dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  display: none; /* Hidden by default */
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  min-width: 200px;
+}
+
+.dropdown ul li {
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.dropdown ul li:last-child {
+  border-bottom: none;
+}
+
+.dropdown ul li a {
+  display: block;
+  padding: 14px 15px;
+  text-decoration: none;
+  color: #333;
+  text-align: center;
+}
+
+.dropdown ul li a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover ul {
+  display: block;
+}

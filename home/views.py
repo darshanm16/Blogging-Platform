@@ -193,6 +193,29 @@ def profile(request):
 
     return render(request,'profile.html',{'blogs': d})
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def modifyBlog(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'DELETE':
+        try:
+            data = json.loads(request.body)
+            blog_id = data.get('id')
+            if not blog_id:
+                return JsonResponse({'error': 'Blog ID is required.'}, status=400)
+            blog = Blogs.objects.get(id=blog_id)
+            blog.delete()
+            messages.success(request, "Blog deleted Successfully!")
+            return JsonResponse({'message': 'Blog deleted successfully.'}, status=200)
+        
+        except Exception as e:
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
 
 def writeblog(request):
     if isinstance(request.user, AnonymousUser):
