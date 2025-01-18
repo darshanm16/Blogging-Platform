@@ -78,7 +78,7 @@ h2 {
 }
 
 .blog-item h3 {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 20px;
   color: #333;
 }
@@ -100,16 +100,12 @@ h2 {
   font-size: 14px;
 }
 
-.blog-item button:hover {
-  background-color: #e53935;
-}
-
 #confirm {
   position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: #e2e2e2;
+  background-color: white;
   padding: 40px 20px;
   font-size: 16px;
   width: 300px;
@@ -121,7 +117,7 @@ h2 {
   font-weight: 600;
 }
 .confirmbtn {
-  color: #dcdcdc;
+  color: white;
   cursor: pointer;
   border: 0;
   padding: 7px 10px;
@@ -137,8 +133,6 @@ h2 {
 #appear {
   background-color: #333;
 }
-
-
 
 .dropdown {
   position: relative;
@@ -192,6 +186,32 @@ h2 {
 }
 
 /* Show dropdown on hover */
-.dropdown:hover ul {
+.dropdown:hover > ul {
   display: block;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  resize: none;
+}
+
+/* Focus effect for input and textarea */
+input[type="text"]:focus,
+textarea:focus {
+  border-color: black;
+  box-shadow: 0 0 8px rgba(92, 103, 242, 0.2);
+  outline: none;
+}
+
+#updatebtns {
+  display: flex;
+  justify-content: space-evenly;
 }

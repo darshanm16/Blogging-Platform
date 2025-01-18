@@ -211,8 +211,34 @@ def modifyBlog(request):
             messages.success(request, "Blog deleted Successfully!")
             return JsonResponse({'message': 'Blog deleted successfully.'}, status=200)
         
+        except Blogs.DoesNotExist:
+            return JsonResponse({'error': 'Blog not found.'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
         except Exception as e:
             return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=400)
+
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            blog_id = data.get('id')
+            title = data.get('title')
+            content = data.get('content')
+
+            blog = Blogs.objects.get(id=blog_id)
+            blog.title = title
+            blog.content = content
+            blog.save()
+            messages.success(request, "Blog updated Successfully!")
+            return JsonResponse({'message': 'Blog updated successfully.'}, status=200)
+        
+        except Blogs.DoesNotExist:
+            return JsonResponse({'error': 'Blog not found.'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=400)
+
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 

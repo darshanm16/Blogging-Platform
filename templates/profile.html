@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %} Profile {% endblock title %}
 {% block css %}
-<link rel="stylesheet" href="/static/profilestyle.css" />
+<link rel="stylesheet" href="/static/profile.css" />
 {% endblock css %} {% block body %}
 
 <main>
@@ -39,40 +39,49 @@
     <div id="confirm" style="visibility: hidden;">
       <p class="span">are you sure you want to delete?</p>
       <div class="conbtn">
-        <button type="button" id="cancel" class="confirmbtn" style="background-color: #f44336;">Cancel</button>
-        <button type="button" id="yes" class="confirmbtn" style="background-color: #45a049;">Yes</button>
+        <button type="button" id="cancel" class="confirmbtn" style="background-color: #f44336;">Back</button>
+        <button type="button" id="yes" class="confirmbtn" style="background-color: #45a049;">Confirm</button>
       </div>
     </div>
 
     <div class="blogs">
       {% for blog in blogs %}
-
       <div class="blog-item">
         <div>
           <div id="blog-header" style="display: flex; justify-content: space-between;">
             <div class="name">
-              <h3>{{blog.title}}</h3>
+              <h3 class="blog{{blog.id}}">{{blog.title}}</h3>
+              <input type="text" id="title{{blog.id}}" class="blog{{blog.id}}" value="{{blog.title}}"
+                style="display: none;" required /><br>
               <small>Posted on: {{blog.date}}</small>
             </div>
-
-
             <div class="dropdown">
               <a class="button">
                 <img src="\static\burger.png" alt="Menu" style="width: 30px; height: 20px;">
               </a>
               <ul>
+                <li><a onclick="editblog('{{blog.id}}')">Edit blog</a></li>
                 <li><a onclick="deleteblog('{{blog.id}}')">Delete blog</a></li>
-                <li><a>Edit blog</a></li>
+                <li><a id="visibility" onclick="">
+                    {% if blog.ananymous %}
+                    Ananymous
+                    {% else %}
+                    Not Ananymous
+                    {% endif %}
+                </a></li>
               </ul>
             </div>
-
-
           </div>
           <hr />
-          <p style="text-align: justify">{{blog.content|linebreaksbr}}</p>
+          <p class="blog{{blog.id}}" style="text-align: justify;">{{blog.content|linebreaksbr}}</p><br>
+          <textarea id="content{{blog.id}}" rows="10" class="blog{{blog.id}}" style="display: none;"
+            required>{{blog.content}}</textarea>
+        </div>
+        <div id="updatebtns" class="blog{{blog.id}}" style="display: none;">
+          <button type="button" onclick="editblog('{{blog.id}}')">Cancel</button>
+          <button type="button" onclick="updateblog('{{blog.id}}')" style="background-color: #4a54e1;">Update</button>
         </div>
       </div>
-
       {% endfor %}
     </div>
   </div>
@@ -82,40 +91,6 @@
 
 {% block js %}
 
-<script>
-  function deleteblog(id) {
-    var con = document.getElementById('confirm');
-    con.style.visibility = "visible";
-    document.getElementById('cancel').onclick = function () {
-      con.style.visibility = "hidden";
-    };
-
-    document.getElementById('yes').onclick = function () {
-      con.style.visibility = "hidden";
-      fetch(`/profile/modify-blog/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: id })
-      })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            alert('Failed to delete the blog.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred while deleting the blog.');
-        });
-    };
-
-  }
-
-
-
-</script>
+<script src="\static\profile.js"></script>
 
 {% endblock js %}
