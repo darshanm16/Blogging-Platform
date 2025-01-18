@@ -185,10 +185,6 @@ h2 {
   background-color: #f1f1f1;
 }
 
-/* Show dropdown on hover */
-.dropdown:hover > ul {
-  display: block;
-}
 
 input[type="text"],
 textarea {

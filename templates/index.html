@@ -20,8 +20,8 @@
     </p>
     <hr />
     <div class="interaction-bar">
-      <button class="like-button" onclick="handleLike()">
-        <span>&#x2764;</span> Like <span id="like-count">0</span>
+      <button class="like-button" onclick="blogLike('{{ blog.id }}')">
+        <span>&#x2764;</span><span id="like-count{{blog.id}}">{{blog.likes}}</span>
       </button>
       <button class="like-button" onclick="toggleComments()">
         Read Comments

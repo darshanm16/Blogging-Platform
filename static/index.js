@@ -9,3 +9,17 @@ function toggleComments() {
     commentsList.style.display = "none";
   }
 }
+
+function blogLike(id) {
+  fetch("/index/blog/like/", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      document.getElementById("like-count" + id).innerText = data.likes;
+    });
+}

@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from hello.settings import EMAIL_HOST_USER
 import random,json
 from django.contrib.auth.hashers import make_password
+from django.views.decorators.csrf import csrf_exempt
 
 
 def resetpassword(request):
@@ -177,9 +178,31 @@ def index(request):
     data=Blogs.objects.exclude(user_name=request.user).order_by('?').values()
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
-    
     return render(request,'index.html',{'blogs': d})
 
+
+@csrf_exempt
+def updateLikes(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        blog_id = data.get('id')
+        user_name = request.user
+        if Likes.objects.filter(blog_id=blog_id, user_name=user_name).exists():
+            Likes.objects.filter(blog_id=blog_id, user_name=user_name).delete()
+            blog = Blogs.objects.get(id=blog_id)
+            blog.likes -= 1
+            blog.save()
+            return JsonResponse({'likes':blog.likes}, status=200)
+        else:
+            like = Likes(blog_id=blog_id, user_name=user_name)
+            blog = Blogs.objects.get(id=blog_id)
+            blog.likes += 1
+            blog.save()
+            like.save()
+            return JsonResponse({'likes':blog.likes}, status=200)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 def profile(request):
     if isinstance(request.user, AnonymousUser):

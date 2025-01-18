@@ -1,4 +1,14 @@
+function dropdown(id) {
+  var dropdown = document.getElementById("dropdown" + id);
+  if (dropdown.style.display == "") {
+    dropdown.style.display = "block";
+  } else {
+    dropdown.style.display = "";
+  }
+}
+
 function deleteblog(id) {
+  dropdown(id);
   var con = document.getElementById("confirm");
   con.style.visibility = "visible";
   document.getElementById("cancel").onclick = function () {
@@ -29,6 +39,7 @@ function deleteblog(id) {
 }
 
 function editblog(id) {
+  dropdown(id);
   var blogid = "blog" + id;
   var blog = document.getElementsByClassName(blogid);
   for (var i = 0; i < blog.length; i++) {

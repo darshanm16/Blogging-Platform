@@ -85,3 +85,13 @@ body {
 .container p a:hover {
   color: #0056b3;
 }
+
+footer {
+  font-size: 14px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background: #fff;
+  margin-top: 20px;
+}

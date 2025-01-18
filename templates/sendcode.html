@@ -27,9 +27,9 @@
             <form method="POST" action="verifyotp/">
                 {% csrf_token %}
                 <div class="form-group" style="Display: flex;margin-top:15px;gap:10px;">
-                    <input type="text" id="formotp" name="formotp" placeholder="Security Code" style="width: 200%;" required>
-                    <button type="submit" class="btn" id="backToLogin"
-                        style="background-color: #29ae00;">Login</button>
+                    <input type="text" id="formotp" name="formotp" placeholder="Security Code" style="width: 200%;"
+                        required>
+                    <button type="submit" class="btn" id="backToLogin" style="background-color: #29ae00;">Login</button>
                 </div>
             </form>
 
@@ -45,6 +45,12 @@
         </div>
 
     </div>
+
+    <footer>
+        <p>&copy; 2025 Blogger. All rights reserved. <a href="#">Privacy Policy</a></p>
+    </footer>
+
+
     <script>
         const sendResetLink = document.getElementById('sendResetLink');
 
