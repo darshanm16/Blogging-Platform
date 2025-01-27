@@ -51,11 +51,19 @@
               <h3 class="blog{{blog.id}}">{{blog.title}}</h3>
               <input type="text" id="title{{blog.id}}" class="blog{{blog.id}}" value="{{blog.title}}"
                 style="display: none;" required /><br>
+
+              {% if blog.ananymous %}
+              <img src="\static\hidden.png" width="18" alt="" srcset="">
+              {% else %}
+              <img src="\static\eye.png" width="18" alt="" srcset="">
+              {% endif %}
+
               <small>Posted on: {{blog.date}}</small>
             </div>
             <div class="dropdown">
               <a class="button">
-                <img onclick="dropdown('{{blog.id}}')" src="\static\burger.png" alt="Menu" style="width: 30px; height: 20px;">
+                <img onclick="dropdown('{{blog.id}}')" src="\static\burger.png" alt="Menu"
+                  style="width: 30px; height: 20px;">
               </a>
               <ul id="dropdown{{blog.id}}">
                 <li><a onclick="editblog('{{blog.id}}')">Edit blog</a></li>
@@ -66,7 +74,7 @@
                     {% else %}
                     Not Ananymous
                     {% endif %}
-                </a></li>
+                  </a></li>
               </ul>
             </div>
           </div>

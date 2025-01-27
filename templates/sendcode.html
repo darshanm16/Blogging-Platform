@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Code | Blogger</title>
+    <title>Login by Code | Blogger</title>
     <link rel="shortcut icon" href="\static\icon.png" type="image/x-icon">
     <link rel="stylesheet" href="\static\signin.css">
 </head>
@@ -24,17 +24,16 @@
                 <button type="submit" class="btn" id="sendResetLink">Send Code</button>
             </form>
 
-            <form method="POST" action="verifyotp/">
+            <form method="POST" action="verifyotp/" id="login-form">
                 {% csrf_token %}
                 <div class="form-group" style="Display: flex;margin-top:15px;gap:10px;">
-                    <input type="text" id="formotp" name="formotp" placeholder="Security Code" style="width: 200%;"
-                        required>
+                    <input type="text" id="formotp" name="formotp" placeholder="Security Code" style="width: 200%;" maxlength="6" required>
                     <button type="submit" class="btn" id="backToLogin" style="background-color: #29ae00;">Login</button>
                 </div>
             </form>
 
             {% if messages %} {% for message in messages %}
-            <div class="" role="alert" style="text-align: center;">
+            <div class="" role="alert" style="text-align: center; margin-top: 10px;">
                 <strong style="color: red;">{{ message }}</strong>
             </div>
             {% endfor %} {% endif %}

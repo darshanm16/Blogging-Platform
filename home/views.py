@@ -50,18 +50,19 @@ Thank you,
 The Blogger Team
 
 """
-            send_mail(
+            if not send_mail(
                 subject,
                 message,
                 EMAIL_HOST_USER,
                 [email],
                 fail_silently=True,
-            )
+            ):
+                messages.error(request, 'There was an error sending the email. Please try again later.')
+                return redirect(sendcode)
             request.session['resetemail'] = email
             request.session['loginotp'] = loginotp
             
             messages.success(request, 'OTP sent to your email')
-            return redirect(sendcode)
     
         else:
             messages.error(request, 'No user found!')
@@ -111,42 +112,46 @@ The Blogger Team
 
 """
     
-    send_mail(
+    if send_mail(
         subject,
         message,
         EMAIL_HOST_USER,
         [email],
         fail_silently=True,
-    )
+    ):
+        user_data = {
+            'username': username,
+            'email': email,
+            'first_name': firstname,
+            'last_name': lastname,
+            'password':password
+        }
+        request.session['user'] = json.dumps(user_data)
+        request.session['otp'] = otp
+        return True
+    else:
+        messages.error(request,"Verification failed. Kindly retry in a moment.")
+        return False
     
-    user_data = {
-        'username': username,
-        'email': email,
-        'first_name': firstname,
-        'last_name': lastname,
-        'password':password
-    }
-    request.session['user'] = json.dumps(user_data)
-
-    request.session['otp'] = otp
-
-    return render(request, 'verify_signup.html')
     
 def signup(request):
     request.session.flush()
     if request.method=="POST":
         firstname=request.POST.get('fname')
         lastname=request.POST.get('lname')
-        username=request.POST.get('username')
         email=request.POST.get('email')
+        key=email.index('@')
+        username=email[:key]
         password=request.POST.get('password')
         
         if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
             messages.error(request,'username or email already exists!')
             return redirect(signup)
         else:
-            verify_signup(request, firstname=firstname, lastname=lastname, username=username, email=email, password=password)
-            return redirect(verify_otp)
+            if verify_signup(request, firstname=firstname, lastname=lastname, username=username, email=email, password=password):
+                return redirect(verify_otp)
+            else:
+                return redirect(signup)
     return render(request,'signup.html')
 
 def login_user(request):
@@ -155,13 +160,18 @@ def login_user(request):
     
     if request.method=="POST":
         username=request.POST.get('username')
+        if '@' in username:
+            key=username.index('@')
+            username=username[:key]
         password=request.POST.get('password')
         user=authenticate(request,username=username,password=password)
         if user is not None:
             login(request,user)
             return redirect(profile)
+        elif not User.objects.filter(username=username).exists():  
+            messages.error(request,'User not registered!')
         else:
-            messages.error(request,'Incorrect username or password!')
+            messages.error(request,'Incorrect password!')
     return render(request,'login.html')
 
 

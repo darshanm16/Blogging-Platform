@@ -185,7 +185,6 @@ h2 {
   background-color: #f1f1f1;
 }
 
-
 input[type="text"],
 textarea {
   width: 100%;
@@ -210,4 +209,10 @@ textarea:focus {
 #updatebtns {
   display: flex;
   justify-content: space-evenly;
+}
+
+small {
+  position: relative;
+  bottom: 4px;
+  left: 3px;
 }
