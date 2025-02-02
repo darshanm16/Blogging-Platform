@@ -1,50 +1,123 @@
-{% extends "base.html" %} {% block body %} {% block css %}
+{% extends "base.html" %} {% block css %}
 <link rel="stylesheet" href="\static\index.css" />
 {% endblock css %}
+{% block body %}
 
-<main>
-  <h1 style="text-align: center">Exclusive Blogs</h1>
-  {% for blog in blogs %}
-  <div class="blog-container">
-    <h3 class="blog-title">
-      {{ blog.title }}
-      {% if blog.ananymous %}
-      <span class="span">by Ananymous User</span>
-      {% else %}
-      <span class="span">by {{blog.user_name}}</span>
-      {% endif %}
-    </h3>
-    <hr />
-    <p class="blog-content" style="text-align: justify">
-      {{ blog.content|linebreaksbr }}
-    </p>
-    <hr />
-    <div class="interaction-bar">
-      <button class="like-button" onclick="blogLike('{{ blog.id }}')">
-        <span>&#x2764;</span><span id="like-count{{blog.id}}">{{blog.likes}}</span>
-      </button>
-      <button class="like-button" onclick="toggleComments()">
-        Read Comments
-      </button>
-    </div>
+<body>
 
-    <div class="comment-section">
-      <div class="comment-box">
-        <textarea id="comment-input" rows="2" placeholder="Write a comment..."></textarea>
-        <button onclick="addComment()">Post</button>
+  <div class="main-container">
+    <!-- Left sidebar remains the same -->
+    <aside class="sidebar">
+      <div class="profile-card">
+        <h3>{{request.user.get_full_name}}</h3>
+        <p>Tech Enthusiast & Blogger</p>
       </div>
-      <ul class="comments" id="comments-list">
-        <li>hello</li>
-        <li>hello</li>
-        <li>hello</li>
-        <li>hello</li>
-        <li>hello</li>
-      </ul>
-    </div>
+      <div class="trending">
+        <h4>Trending Topics</h4>
+        <div class="trending-item">
+          <span>#Technology</span>
+        </div>
+        <div class="trending-item">
+          <span>#Programming</span>
+        </div>
+        <div class="trending-item">
+          <span>#WebDev</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="feed">
+      <!-- Create post section remains the same -->
+      <div class="create-post">
+        <h3>Create Post</h3>
+        <textarea class="post-input" placeholder="What's on your mind?"></textarea>
+        <button class="btn btn-primary" style="margin-top: 10px;">Publish</button>
+      </div>
+
+      <!-- Updated post card with comments section -->
+      {% for blog in blogs %}
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-meta">
+            <strong>{{ blog.title }}</strong>
+            <small>
+              {% if blog.ananymous %}
+              <span class="span">Ananymous User</span>
+              {% else %}
+              <span class="span">{{blog.user_name}}</span>
+              {% endif %}
+              | 2 hours ago</small>
+          </div>
+        </div>
+        <p class="blog-para blog-para{{blog.id}}" style="text-align: justify;">{{ blog.content|linebreaksbr }}</p>
+        <a class="readmore" onclick="readmore('{{blog.id}}')">Read less</a>
+        <div class="post-actions">
+          <button id="likes{{blog.id}}" class="action-btn" onclick="blogLike('{{ blog.id }}')">
+            {% if blog.liked %}
+            ❤️
+            {% else %}
+            🤍
+            {% endif %}
+            {{blog.likes}} likes
+          </button>
+          <button class="action-btn comment-toggle">💬 Comment (3)</button>
+        </div>
+        <div class="comments-section">
+          <div class="comment-input-container">
+            <input type="text" class="comment-input" placeholder="Write a comment...">
+            <button class="btn btn-primary">Post</button>
+          </div>
+          <div class="comment">
+            <div class="comment-content">
+              <strong>Alex Johnson</strong><br>
+              Vue.js is my go-to framework these days. You should try it!
+            </div>
+          </div>
+          <div class="comment">
+            <div class="comment-content">
+              <strong>Sarah Williams</strong><br>
+              React is amazing! Have you tried using any state management libraries?
+            </div>
+          </div>
+          <div class="comment">
+            <div class="comment-content">
+              <strong>Mike Brown</strong><br>
+              Congratulations! The first app is always special 🎉
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+    </main>
+
+    <!-- Right sidebar remains the same -->
+    <aside class="sidebar">
+      <h3>Suggested Blogs</h3>
+      <div class="trending-item">
+        <div>
+          <strong>Tech Daily</strong>
+          <p>Latest tech news and reviews</p>
+        </div>
+      </div>
+      <div class="trending-item">
+        <div>
+          <strong>Code Masters</strong>
+          <p>Programming tutorials and tips</p>
+        </div>
+      </div>
+      <div class="trending-item">
+        <div>
+          <strong>Tech Daily</strong>
+          <p>Latest tech news and reviews</p>
+        </div>
+      </div>
+    </aside>
   </div>
-  {% endfor %}
-</main>
+</body>
+
+{% endblock body %}
 
 {% block js %}
 <script src="\static\index.js"></script>
-{% endblock js %} {% endblock body %} {% block title %} Home {% endblock title %}
+{% endblock js %} {% block title %} Home {% endblock title %}

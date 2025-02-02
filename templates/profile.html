@@ -1,102 +1,153 @@
 {% extends "base.html" %} {% block title %} Profile {% endblock title %}
 {% block css %}
 <link rel="stylesheet" href="/static/profile.css" />
-{% endblock css %} {% block body %}
-
-<main>
-  <div class="container">
-    <div class="header">
-      <h1>@{{request.user}}</h1>
-    </div>
-    <div class="profile-info" id="profileInfo">
-      <p>
-        <b><span id="profileName">{{request.user.get_full_name}}</span></b>
-      </p>
-      <p>
-        <span id="profileEmail">{{request.user.email}}</span>
-      </p>
-      <p style="margin-top: 15px;">
-        <span id="profileBio">Passionate web developer and tech enthusiast. Love creating beautiful
-          and functional web pages.</span>
-      </p>
-      <div class="forms">
-        <form action="" method="post">
-          {% csrf_token %}
-          <button type="button">Edit Profile</button>
-        </form>
-        <form action="/logout/" method="post">
-          {% csrf_token %}
-          <button style="background-color: #f44336" type="submit">
-            Log Out
-          </button>
-        </form>
-      </div>
-    </div>
-    <h2>Blogs Posted</h2>
-
-    <div id="confirm" style="visibility: hidden;">
-      <p class="span">are you sure you want to delete?</p>
-      <div class="conbtn">
-        <button type="button" id="cancel" class="confirmbtn" style="background-color: #f44336;">Back</button>
-        <button type="button" id="yes" class="confirmbtn" style="background-color: #45a049;">Confirm</button>
-      </div>
-    </div>
-
-    <div class="blogs">
-      {% for blog in blogs %}
-      <div class="blog-item">
-        <div>
-          <div id="blog-header" style="display: flex; justify-content: space-between;">
-            <div class="name">
-              <h3 class="blog{{blog.id}}">{{blog.title}}</h3>
-              <input type="text" id="title{{blog.id}}" class="blog{{blog.id}}" value="{{blog.title}}"
-                style="display: none;" required /><br>
-
-              {% if blog.ananymous %}
-              <img src="\static\hidden.png" width="18" alt="" srcset="">
-              {% else %}
-              <img src="\static\eye.png" width="18" alt="" srcset="">
-              {% endif %}
-
-              <small>Posted on: {{blog.date}}</small>
-            </div>
-            <div class="dropdown">
-              <a class="button">
-                <img onclick="dropdown('{{blog.id}}')" src="\static\burger.png" alt="Menu"
-                  style="width: 30px; height: 20px;">
-              </a>
-              <ul id="dropdown{{blog.id}}">
-                <li><a onclick="editblog('{{blog.id}}')">Edit blog</a></li>
-                <li><a onclick="deleteblog('{{blog.id}}')">Delete blog</a></li>
-                <li><a id="visibility" onclick="">
-                    {% if blog.ananymous %}
-                    Ananymous
-                    {% else %}
-                    Not Ananymous
-                    {% endif %}
-                  </a></li>
-              </ul>
-            </div>
-          </div>
-          <hr />
-          <p class="blog{{blog.id}}" style="text-align: justify;">{{blog.content|linebreaksbr}}</p><br>
-          <textarea id="content{{blog.id}}" rows="10" class="blog{{blog.id}}" style="display: none;"
-            required>{{blog.content}}</textarea>
-        </div>
-        <div id="updatebtns" class="blog{{blog.id}}" style="display: none;">
-          <button type="button" onclick="editblog('{{blog.id}}')">Cancel</button>
-          <button type="button" onclick="updateblog('{{blog.id}}')" style="background-color: #4a54e1;">Update</button>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</main>
-
-{% endblock body %}
+{% endblock css %}
 
 {% block js %}
 
 <script src="\static\profile.js"></script>
 
 {% endblock js %}
+
+{% block body %}
+
+<body>
+  <div class="profile-header">
+
+    <div class="post-menu" style="position: absolute; top: 30px; right: 30px;">
+      <button class="post-menu-btn" aria-label="Post options">⋮</button>
+      <div class="post-menu-content">
+        <div class="menu-item edit-profile-btn" onclick="">
+          Edit Profile
+        </div>
+        <form action="/logout/" method="post" name="logout">
+          {% csrf_token %}
+          <div class="menu-item delete-confirm" onClick="document.forms['logout'].submit();">
+            Logout
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+    <h1 style="margin: 0;padding:0">{{request.user.get_full_name}}</h1>
+    <p style="margin: 0;padding:0">Tech Enthusiast & Professional Blogger</p>
+    <div class="profile-stats">
+      <div class="stat">
+        <div class="stat-number">{{ blogs|length }}</div>
+        <div class="stat-label">Blogs</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">{{total_likes}}</div>
+        <div class="stat-label">Likes</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <aside class="sidebar">
+      <div class="info-section">
+        <h3>About</h3>
+        <p>Passionate tech blogger with 5+ years of experience. Sharing insights about web development, AI, and
+          the future of technology.</p>
+      </div>
+
+      <div class="info-section">
+        <h3>Expertise</h3>
+        <div>
+          <span class="badge">Web Development</span>
+          <span class="badge">AI/ML</span>
+          <span class="badge">Cloud Computing</span>
+          <span class="badge">Tech Reviews</span>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h3>Contact</h3>
+        <div class="info-item">
+          <span>👤</span>
+          <span>@{{request.user}}</span>
+        </div>
+        <div class="info-item">
+          <span>📧</span>
+          <span>{{request.user.email}}</span>
+        </div>
+        <div class="info-item">
+          <span>🌐</span>
+          <span>johndoe.blog</span>
+        </div>
+        <div class="info-item">
+          <span>📍</span>
+          <span>San Francisco, CA</span>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      {% for blog in blogs %}
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-meta">
+
+            <strong id="blog-title{{blog.id}}">{{blog.title}}</strong>
+            <div style="display: flex;gap: 10px;margin-top: 6px;">
+              {% if blog.ananymous %}
+              <img src="\static\hidden.png" width="18" alt="" srcset="">
+              {% endif %}
+              <span style="font-size: 13px;font-weight: 600;">{{ blog.date }}</span>
+            </div>
+          </div>
+          <div class="post-menu">
+            <button class="post-menu-btn" aria-label="Post options">⋮</button>
+            <div class="post-menu-content">
+              <div class="menu-item" onclick="editPost('{{blog.id}}')">
+                ✏️ Edit Post
+              </div>
+              <div class="menu-item delete-confirm" onclick="deletePost('{{blog.id}}')">
+                🗑️ Delete Post
+              </div>
+              <div class="menu-item" onclick="updateAnanymous('{{blog.id}}')">
+                {% if blog.ananymous %}
+                📢 Make Public
+                {% else %}
+                👽 Make ananymous
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if blog.content|length > 303 %}
+        <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}">{{blog.content|linebreaksbr}}</p>
+        <a class="readmore readmore{{blog.id}}" onclick="readmore('{{blog.id}}')">Read more...</a>
+        {% else %}
+        <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}" style="height: auto;">
+          {{blog.content|linebreaksbr}}</p>
+        {% endif %}
+
+        <div class="post-actions">
+          <button class="action-btn like-btn">❤️ {{blog.likes}} Likes</button>
+          <button class="action-btn">💬 56 Comments</button>
+        </div>
+      </div>
+      {% endfor %}
+    </main>
+  </div>
+
+  <div class="edit-overlay">
+    <div class="edit-modal">
+      <div class="edit-title">
+        <h3>Edit Post</h3>
+        <button class="close-modal" onclick="closeEditModal()">×</button>
+      </div>
+      <input type="text" name="title" id="edited-title" class="edit-head">
+      <textarea class="edit-content" id="edited-content" style="text-align: justify;"></textarea>
+      <div class="modal-actions">
+        <button class="edit-buttons" onclick="closeEditModal()" style="background-color: red;">Cancel</button>
+        <button class="edit-buttons" onclick="saveEdit()" style="background-color: #9c27b0;">Update</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+{% endblock body %}

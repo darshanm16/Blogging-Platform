@@ -10,64 +10,6 @@ from hello.settings import EMAIL_HOST_USER
 import random,json
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
-
-
-def resetpassword(request):
-    if request.method == "POST":
-        form_otp=request.POST.get('formotp')
-        stored_otp=request.session.get('loginotp')
-        if form_otp and stored_otp and int(form_otp) == int(stored_otp):
-            user=User.objects.get(email=request.session.get('resetemail'))
-            login(request,user)
-            del request.session['loginotp']
-            del request.session['resetemail']
-            return redirect(profile)
-        else:
-            messages.error(request, 'Invalid OTP! Please try again.')
-            return redirect(sendcode) 
-
-def sendcode(request):
-    if request.method == "POST":
-        email = request.POST.get('resetEmail')
-        if User.objects.filter(email=email).exists():
-            user = User.objects.get(email=email)
-            loginotp = random.randint(100000, 999999)
-            subject = 'Your Security Code for Login'
-            message = f"""
-Dear {user.first_name},
-
-Your security code is: {loginotp}
-
-Please use this code to complete your login process.
-
-Important Security Tips:
--Do not share this code with anyone.
--If you did not request this code, please contact our support team immediately.
-
-For any assistance, feel free to reach out to us at {EMAIL_HOST_USER} or {9482216949}.
-
-Thank you,
-The Blogger Team
-
-"""
-            if not send_mail(
-                subject,
-                message,
-                EMAIL_HOST_USER,
-                [email],
-                fail_silently=True,
-            ):
-                messages.error(request, 'There was an error sending the email. Please try again later.')
-                return redirect(sendcode)
-            request.session['resetemail'] = email
-            request.session['loginotp'] = loginotp
-            
-            messages.success(request, 'OTP sent to your email')
-    
-        else:
-            messages.error(request, 'No user found!')
-            return redirect(sendcode)
-    return render(request,'sendcode.html')
     
 
 def verify_otp(request):
@@ -175,6 +117,65 @@ def login_user(request):
     return render(request,'login.html')
 
 
+def codeLogin(request):
+    if request.method == "POST":
+        form_otp=request.POST.get('formotp')
+        stored_otp=request.session.get('loginotp')
+        if form_otp and stored_otp and int(form_otp) == int(stored_otp):
+            user=User.objects.get(email=request.session.get('resetemail'))
+            login(request,user)
+            del request.session['loginotp']
+            del request.session['resetemail']
+            return redirect(profile)
+        else:
+            messages.error(request, 'Invalid OTP! Please try again.')
+            return redirect(sendSecuritycode) 
+
+
+def sendSecuritycode(request):
+    if request.method == "POST":
+        email = request.POST.get('resetEmail')
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            loginotp = random.randint(100000, 999999)
+            subject = 'Your Security Code for Login'
+            message = f"""
+Dear {user.first_name},
+
+Your security code is: {loginotp}
+
+Please use this code to complete your login process.
+
+Important Security Tips:
+-Do not share this code with anyone.
+-If you did not request this code, please contact our support team immediately.
+
+For any assistance, feel free to reach out to us at {EMAIL_HOST_USER} or {9482216949}.
+
+Thank you,
+The Blogger Team
+
+"""
+            if not send_mail(
+                subject,
+                message,
+                EMAIL_HOST_USER,
+                [email],
+                fail_silently=True,
+            ):
+                messages.error(request, 'There was an error sending the email. Please try again later.')
+                return redirect(sendSecuritycode)
+            request.session['resetemail'] = email
+            request.session['loginotp'] = loginotp
+            
+            messages.success(request, 'OTP sent to your email')
+    
+        else:
+            messages.error(request, 'No user found!')
+            return redirect(sendSecuritycode)
+    return render(request,'sendcode.html')
+
+
 def logout_user(request):
     request.session.flush()
     logout(request)
@@ -185,9 +186,12 @@ def index(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)
     
-    data=Blogs.objects.exclude(user_name=request.user).order_by('?').values()
+    data=Blogs.objects.exclude(user_name=request.user).values()
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
+    for blog in d:
+        if Likes.objects.filter(blog_id=blog['id'], user_name=request.user).exists():
+            blog['liked'] = True
     return render(request,'index.html',{'blogs': d})
 
 
@@ -214,17 +218,21 @@ def updateLikes(request):
             return JsonResponse({'likes':blog.likes}, status=200)
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+from django.db.models import Sum
+
 def profile(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)
-    data=Blogs.objects.filter(user_name=request.user).values()
+    data=Blogs.objects.filter(user_name=request.user).values().order_by('-id')
+    total_likes = data.aggregate(Sum('likes'))['likes__sum']
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
-    
+    for blog in d:
+        blog['date'] = datetime.strptime(blog['date'], '%Y-%m-%d').strftime('%b %d, %Y')
     if str(request.user)=="admin":
-        return render(request,'adminpage.html',{'blogs': d})
+        return render(request,'adminpage.html',{'blogs': d,'total_likes':total_likes})
 
-    return render(request,'profile.html',{'blogs': d})
+    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes})
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -250,30 +258,33 @@ def modifyBlog(request):
             return JsonResponse({'error': 'Invalid JSON.'}, status=400)
         except Exception as e:
             return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=400)
+    if request.method=='PUT':
+        data = json.loads(request.body)
+        blog_id = data.get('id')
+        title = data.get('title')
+        content = data.get('content')
+        if not blog_id:
+            return JsonResponse({'error': 'Blog ID is required.'}, status=400)
+        blog = Blogs.objects.get(id=blog_id)
+        blog.title = title
+        blog.content = content
+        blog.save()
+        messages.success(request, "Blog updated Successfully!")
+        return JsonResponse({'message': 'Blog updated successfully.'}, status=200)
 
+@csrf_exempt
+def updateAnanymous(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
     if request.method == 'PUT':
-        try:
-            data = json.loads(request.body)
-            blog_id = data.get('id')
-            title = data.get('title')
-            content = data.get('content')
-
-            blog = Blogs.objects.get(id=blog_id)
-            blog.title = title
-            blog.content = content
-            blog.save()
-            messages.success(request, "Blog updated Successfully!")
-            return JsonResponse({'message': 'Blog updated successfully.'}, status=200)
-        
-        except Blogs.DoesNotExist:
-            return JsonResponse({'error': 'Blog not found.'}, status=404)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=400)
-
-
-    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+        data = json.loads(request.body)
+        blog_id = data.get('id')
+        if not blog_id:
+            return JsonResponse({'error': 'Blog ID is required.'}, status=400)
+        blog = Blogs.objects.get(id=blog_id)
+        blog.ananymous = not blog.ananymous
+        blog.save()
+        return JsonResponse({'ananymous': blog.ananymous}, status=200)
 
 
 def writeblog(request):
