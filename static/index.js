@@ -1,3 +1,38 @@
+function postComment(id) {
+  var comment = document.getElementById("comment-input" + id).value.trim();
+  if (!comment) {
+    return;
+  }
+  fetch("/index/blog/postComment/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id, comment: comment }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      var commentsSection = document.getElementById("comments-section" + id);
+
+      var newComment = document.createElement("div");
+      newComment.className = "comment";
+      newComment.innerHTML = `
+        <div class="comment-content">
+          <strong>${data.user_name || "Anonymous"}</strong><br>
+          <span>${data.comment || "No content"}</span>
+        </div>
+      `;
+      commentsSection.insertBefore(newComment, commentsSection.children[1]);
+      document.getElementById("n-comments" + id).innerText = `💬 Comment (${data.total_comments})`;
+
+      // Clear input field after successful post
+      document.getElementById("comment-input" + id).value = "";
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
 function blogLike(id) {
   fetch("/index/blog/like/", {
     method: "PUT",
@@ -17,7 +52,7 @@ function blogLike(id) {
 }
 
 function readmore(id) {
-  var blog_para = document.getElementsByClassName("blog-para"+id)[0];
+  var blog_para = document.getElementsByClassName("blog-para" + id)[0];
   if (blog_para.style.height === "" || blog_para.style.height === "90px") {
     blog_para.style.height = "auto";
     blog_para.style.overflow = "visible";

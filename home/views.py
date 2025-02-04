@@ -181,19 +181,47 @@ def logout_user(request):
     logout(request)
     return redirect(login_user)
 
+from django.utils.timesince import timesince
 
 def index(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)
     
-    data=Blogs.objects.exclude(user_name=request.user).values()
+    data=Blogs.objects.exclude(user_name=request.user).values().order_by('-id')
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
     for blog in d:
         if Likes.objects.filter(blog_id=blog['id'], user_name=request.user).exists():
             blog['liked'] = True
+        blog_date = datetime.strptime(blog['date'], "%Y-%m-%d")
+        blog['time_ago'] = timesince(d=blog_date)
+        blog['comments'] = Comments.objects.filter(blog_id=blog['id']).order_by('-id')
+        blog['no_of_comments'] = len(blog['comments'])
+    
     return render(request,'index.html',{'blogs': d})
 
+@csrf_exempt
+def blogComment(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            blog_id = data.get('id')
+            blog_comment = data.get('comment')
+
+            comment = Comments(blog_id=blog_id, user_name=request.user.username, comment=blog_comment)
+            comment.save()
+            
+            total_comments=len(Comments.objects.filter(blog_id=blog_id))
+            return JsonResponse({'user_name': request.user.username, 'comment': blog_comment,'total_comments':total_comments}, status=200)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
+        
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 @csrf_exempt
 def updateLikes(request):
@@ -229,6 +257,8 @@ def profile(request):
     d=serializer.data
     for blog in d:
         blog['date'] = datetime.strptime(blog['date'], '%Y-%m-%d').strftime('%b %d, %Y')
+        blog['comments'] = Comments.objects.filter(blog_id=blog['id']).order_by('-id')
+        blog['no_of_comments'] = len(blog['comments'])
     if str(request.user)=="admin":
         return render(request,'adminpage.html',{'blogs': d,'total_likes':total_likes})
 
@@ -245,6 +275,8 @@ def modifyBlog(request):
         try:
             data = json.loads(request.body)
             blog_id = data.get('id')
+            Likes.objects.filter(blog_id=blog_id).delete()
+            Comments.objects.filter(blog_id=blog_id).delete()
             if not blog_id:
                 return JsonResponse({'error': 'Blog ID is required.'}, status=400)
             blog = Blogs.objects.get(id=blog_id)
@@ -258,6 +290,7 @@ def modifyBlog(request):
             return JsonResponse({'error': 'Invalid JSON.'}, status=400)
         except Exception as e:
             return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=400)
+        
     if request.method=='PUT':
         data = json.loads(request.body)
         blog_id = data.get('id')

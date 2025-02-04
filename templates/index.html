@@ -46,11 +46,17 @@
               {% else %}
               <span class="span">{{blog.user_name}}</span>
               {% endif %}
-              | 2 hours ago</small>
+              | {{ blog.time_ago }} ago</small>
           </div>
         </div>
-        <p class="blog-para blog-para{{blog.id}}" style="text-align: justify;">{{ blog.content|linebreaksbr }}</p>
+
+        {% if blog.content|length > 320 %}
+        <p class="blog-para blog-para{{blog.id}}">{{ blog.content|linebreaksbr }}</p>
         <a class="readmore" onclick="readmore('{{blog.id}}')">Read less</a>
+        {% else %}
+        <p class="blog-para blog-para{{blog.id}}" style="text-align: justify; height:auto">{{ blog.content|linebreaksbr }}</p>
+        {% endif %}
+
         <div class="post-actions">
           <button id="likes{{blog.id}}" class="action-btn" onclick="blogLike('{{ blog.id }}')">
             {% if blog.liked %}
@@ -60,31 +66,21 @@
             {% endif %}
             {{blog.likes}} likes
           </button>
-          <button class="action-btn comment-toggle">💬 Comment (3)</button>
+          <button id="n-comments{{blog.id}}" class="action-btn comment-toggle">💬 Comment ({{blog.no_of_comments}})</button>
         </div>
-        <div class="comments-section">
+        <div id="comments-section{{blog.id}}" class="comments-section">
           <div class="comment-input-container">
-            <input type="text" class="comment-input" placeholder="Write a comment...">
-            <button class="btn btn-primary">Post</button>
+            <input type="text" id="comment-input{{blog.id}}" class="comment-input" placeholder="Write a comment...">
+            <button class="btn btn-primary" onclick="postComment('{{blog.id}}','{{blog.no_of_comments}}')">Post</button>
           </div>
+          {% for comment in blog.comments %}
           <div class="comment">
             <div class="comment-content">
-              <strong>Alex Johnson</strong><br>
-              Vue.js is my go-to framework these days. You should try it!
+              <strong>{{comment.user_name}}</strong><br>
+              <span>{{comment.comment}}</span>
             </div>
           </div>
-          <div class="comment">
-            <div class="comment-content">
-              <strong>Sarah Williams</strong><br>
-              React is amazing! Have you tried using any state management libraries?
-            </div>
-          </div>
-          <div class="comment">
-            <div class="comment-content">
-              <strong>Mike Brown</strong><br>
-              Congratulations! The first app is always special 🎉
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
       {% endfor %}
@@ -93,7 +89,7 @@
 
     <!-- Right sidebar remains the same -->
     <aside class="sidebar">
-      <h3>Suggested Blogs</h3>
+      <h3 style="margin: 12px 0;">Suggested Blogs</h3>
       <div class="trending-item">
         <div>
           <strong>Tech Daily</strong>

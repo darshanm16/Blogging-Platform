@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %} Profile {% endblock title %}
 {% block css %}
-<link rel="stylesheet" href="/static/profile.css" />
+<link rel="stylesheet" href="/static/adminprofile.css" />
 {% endblock css %} {% block body %}
 
 <main>
@@ -30,7 +30,7 @@
                     {% csrf_token %}
                     <button type="submit" style="background-color: #7d009f;">Go to Admin Page</button>
                 </form>
-                
+
                 <form action="/logout/" method="post">
                     {% csrf_token %}
                     <button style="background-color: #f44336" type="submit">
@@ -51,7 +51,7 @@
                     <p style="text-align: justify">{{blog.content|linebreaksbr}}</p>
                 </div>
                 <hr />
-                <button>Delete</button>
+                <button onclick="deletePost('{{blog.id}}')">Delete</button>
             </div>
 
             {% endfor %}
@@ -60,3 +60,35 @@
 </main>
 
 {% endblock body %}
+
+{% block js %}
+<script>
+    function deletePost(id) {
+        if (
+            confirm(
+                "Are you sure you want to delete this post? This action cannot be undone."
+            )
+        ) {
+            fetch("/profile/modify-blog/", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: id }),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert("Failed to delete the blog.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("An error occurred while deleting the blog.");
+                });
+        }
+    }
+</script>
+
+{% endblock js %}

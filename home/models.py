@@ -14,8 +14,16 @@ class Blogs(models.Model):
         return self.user_name
     
 class Likes(models.Model):
-    blog_id=models.IntegerField(default=0)
+    blog_id=models.IntegerField()
     user_name=models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.user_name
+    
+class Comments(models.Model):
+    blog_id=models.IntegerField()
+    user_name=models.CharField(max_length=100)
+    comment=models.TextField(max_length=1000)
     
     def __str__(self):
         return self.user_name

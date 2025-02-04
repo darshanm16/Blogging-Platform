@@ -11,6 +11,7 @@ urlpatterns = [
     
     path("index/",views.index,name="Home"),
     path("index/blog/like/",views.updateLikes,name="Likes"),
+    path("index/blog/postComment/",views.blogComment,name="Post Comment"),
     
     path("profile/",views.profile,name="Profile"),
     path("profile/modify-blog/",views.modifyBlog,name="Delete Blog"),

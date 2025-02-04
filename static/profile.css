@@ -272,6 +272,11 @@ body {
   .profile-stats {
     flex-wrap: wrap;
   }
+
+  .sidebar{
+    position: relative;
+    top: 0;
+  }
 }
 
 .post-content {
