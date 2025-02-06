@@ -193,8 +193,7 @@ def index(request):
     for blog in d:
         if Likes.objects.filter(blog_id=blog['id'], user_name=request.user).exists():
             blog['liked'] = True
-        blog_date = datetime.strptime(blog['date'], "%Y-%m-%d")
-        blog['time_ago'] = timesince(d=blog_date)
+        blog['date'] = datetime.strptime(blog['date'], '%Y-%m-%d').strftime('%b %d, %Y')
         blog['comments'] = Comments.objects.filter(blog_id=blog['id']).order_by('-id')
         blog['no_of_comments'] = len(blog['comments'])
     
@@ -214,13 +213,28 @@ def blogComment(request):
             comment.save()
             
             total_comments=len(Comments.objects.filter(blog_id=blog_id))
-            return JsonResponse({'user_name': request.user.username, 'comment': blog_comment,'total_comments':total_comments}, status=200)
+            comment_id=comment.id
+            return JsonResponse({'user_name': request.user.username, 'comment': blog_comment,'total_comments':total_comments,'comment_id':comment_id}, status=200)
         
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
         except Exception as e:
             return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
+    
+    if request.method == 'DELETE':
+        try:
+            data = json.loads(request.body)
+            comment_id = data.get('id')
+            Comments.objects.filter(id=comment_id).delete()
+            return JsonResponse({'message': 'Comment deleted successfully.'}, status=200)
         
+        except Blogs.DoesNotExist:
+            return JsonResponse({'error': 'Comment not found.'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=400)
+            
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 @csrf_exempt

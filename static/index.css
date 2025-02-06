@@ -189,3 +189,15 @@ body {
   height: 90px;
   overflow: hidden;
 }
+.comment-btn {
+  padding: 3px 0px;
+  width: 45px;
+  background-color: #7dbe74;
+  color: white;
+  border: 0;
+  border-radius: 19px;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 4px 15px;
+  width: 65px;
+}

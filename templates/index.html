@@ -39,20 +39,20 @@
       <div class="post-card">
         <div class="post-header">
           <div class="post-meta">
-            <strong>{{ blog.title }}</strong>
+            <strong style="font-size: 17px;">{{ blog.title }}</strong>
             <small>
               {% if blog.ananymous %}
               <span class="span">Ananymous User</span>
               {% else %}
               <span class="span">{{blog.user_name}}</span>
               {% endif %}
-              | {{ blog.time_ago }} ago</small>
+              | {{ blog.date }}</small>
           </div>
         </div>
 
         {% if blog.content|length > 320 %}
         <p class="blog-para blog-para{{blog.id}}">{{ blog.content|linebreaksbr }}</p>
-        <a class="readmore" onclick="readmore('{{blog.id}}')">Read less</a>
+        <a class="readmore" onclick="readmore('{{blog.id}}')">Read more...</a>
         {% else %}
         <p class="blog-para blog-para{{blog.id}}" style="text-align: justify; height:auto">{{ blog.content|linebreaksbr }}</p>
         {% endif %}
@@ -66,18 +66,30 @@
             {% endif %}
             {{blog.likes}} likes
           </button>
-          <button id="n-comments{{blog.id}}" class="action-btn comment-toggle">💬 Comment ({{blog.no_of_comments}})</button>
+          <button id="n-comments{{blog.id}}" class="action-btn comment-toggle">💬 Comment
+            ({{blog.no_of_comments}})</button>
+          <button id="" class="action-btn comment-toggle">💾 Save</button>
         </div>
         <div id="comments-section{{blog.id}}" class="comments-section">
           <div class="comment-input-container">
             <input type="text" id="comment-input{{blog.id}}" class="comment-input" placeholder="Write a comment...">
-            <button class="btn btn-primary" onclick="postComment('{{blog.id}}','{{blog.no_of_comments}}')">Post</button>
+            <button class="btn btn-primary" onclick="postComment('{{blog.id}}')">Post</button>
           </div>
+
           {% for comment in blog.comments %}
-          <div class="comment">
+          <div id="comment{{comment.id}}" class="comment">
             <div class="comment-content">
               <strong>{{comment.user_name}}</strong><br>
-              <span>{{comment.comment}}</span>
+              <span>{{comment.comment}}</span><br>
+
+              {% if request.user.username == comment.user_name %}
+              <div class="comment-btns" style="margin-top: 10px;">
+                <button class="comment-btn">Edit</button>
+                <button class="comment-btn" style="background-color: #ff7474;"
+                  onclick="deleteComment('{{comment.id}}')">Delete</button>
+              </div>
+              {% endif %}
+
             </div>
           </div>
           {% endfor %}

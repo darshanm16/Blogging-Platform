@@ -1,3 +1,31 @@
+function deleteComment(id) {
+  var comment = document.getElementById("comment" + id);
+  if (
+    confirm(
+      "Are you sure you want to delete this comment? This action cannot be undone."
+    )
+  ) {
+    fetch("/index/blog/postComment/", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: id }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          comment.remove();
+        } else {
+          alert("Failed to delete the blog.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred while deleting the blog.");
+      });
+  }
+}
+
 function postComment(id) {
   var comment = document.getElementById("comment-input" + id).value.trim();
   if (!comment) {
@@ -16,14 +44,21 @@ function postComment(id) {
 
       var newComment = document.createElement("div");
       newComment.className = "comment";
+      newComment.id = "comment" + data.comment_id;
       newComment.innerHTML = `
         <div class="comment-content">
           <strong>${data.user_name || "Anonymous"}</strong><br>
           <span>${data.comment || "No content"}</span>
+          <div class="comment-btns" style="margin-top: 10px;">
+            <button class="comment-btn">Edit</button>
+            <button class="comment-btn" style="background-color: #ff7474;" onclick="deleteComment('${data.comment_id}')">Delete</button>
+          </div>
         </div>
       `;
       commentsSection.insertBefore(newComment, commentsSection.children[1]);
-      document.getElementById("n-comments" + id).innerText = `💬 Comment (${data.total_comments})`;
+      document.getElementById(
+        "n-comments" + id
+      ).innerText = `💬 Comment (${data.total_comments})`;
 
       // Clear input field after successful post
       document.getElementById("comment-input" + id).value = "";

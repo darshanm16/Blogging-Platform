@@ -38,7 +38,7 @@
         <div class="stat-label">Blogs</div>
       </div>
       <div class="stat">
-        <div class="stat-number">{{total_likes}}</div>
+        <div class="stat-number">{{total_likes|default:0}}</div>
         <div class="stat-label">Likes</div>
       </div>
     </div>
@@ -73,22 +73,26 @@
           <span>{{request.user.email}}</span>
         </div>
         <div class="info-item">
-          <span>🌐</span>
-          <span>johndoe.blog</span>
+          <span>📅</span>
+          <span>Oct 19, 2004</span>
         </div>
         <div class="info-item">
-          <span>📍</span>
-          <span>San Francisco, CA</span>
+          <span>🌐</span>
+          <span>darshan.blogs</span>
         </div>
       </div>
     </aside>
 
     <main>
+      {% if not blogs %}
+      <a href="/writeblog">
+        <h3 style="text-align: center;">Click here to write your first blog...!</h3>
+      </a>
+      {% endif %}
       {% for blog in blogs %}
       <div class="post-card">
         <div class="post-header">
           <div class="post-meta">
-
             <strong id="blog-title{{blog.id}}">{{blog.title}}</strong>
             <div style="display: flex;gap: 10px;margin-top: 6px;">
               {% if blog.ananymous %}
@@ -127,7 +131,7 @@
 
         <div class="post-actions">
           <button class="action-btn like-btn">❤️ {{blog.likes}} Likes</button>
-          <button class="action-btn">💬 {{blog.no_of_comments}} Comments</button>
+          <button class="action-btn">💬 {{ blog.no_of_comments }} Comments</button>
         </div>
       </div>
       {% endfor %}
