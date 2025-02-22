@@ -85,9 +85,11 @@
 
     <main>
       {% if not blogs %}
-      <a href="/writeblog">
-        <h3 style="text-align: center;">Click here to write your first blog...!</h3>
-      </a>
+      <div class="post-card">
+        <a href="/writeblog" style="text-decoration: none;">
+          <h3 style="text-align: center; color:#1877f2">Click here to write your first blog...!</h3>
+        </a>
+      </div>
       {% endif %}
       {% for blog in blogs %}
       <div class="post-card">

@@ -42,9 +42,17 @@
             <strong style="font-size: 17px;">{{ blog.title }}</strong>
             <small>
               {% if blog.ananymous %}
-              <span class="span">Ananymous User</span>
+              <span class="span">Ananymous User
+                {% if blog.user_name == "blgrhelpline" %}
+                <img src="\static\verified.png" alt="verified" style="width: 10px; height: 11px;">
+                {% endif %} 
+              </span>
               {% else %}
-              <span class="span">{{blog.user_name}}</span>
+              <span class="span">{{blog.user_name}}
+                {% if blog.user_name == "admin" %}
+                <img src="\static\verified.png" alt="verified" style="width: 10px; height: 11px;">
+                {% endif %} 
+              </span>
               {% endif %}
               | {{ blog.date }}</small>
           </div>
@@ -54,7 +62,8 @@
         <p class="blog-para blog-para{{blog.id}}">{{ blog.content|linebreaksbr }}</p>
         <a class="readmore" onclick="readmore('{{blog.id}}')">Read more...</a>
         {% else %}
-        <p class="blog-para blog-para{{blog.id}}" style="text-align: justify; height:auto">{{ blog.content|linebreaksbr }}</p>
+        <p class="blog-para blog-para{{blog.id}}" style="text-align: justify; height:auto">{{blog.content|linebreaksbr}}
+        </p>
         {% endif %}
 
         <div class="post-actions">
@@ -80,11 +89,12 @@
           <div id="comment{{comment.id}}" class="comment">
             <div class="comment-content">
               <strong>{{comment.user_name}}</strong><br>
-              <span>{{comment.comment}}</span><br>
+
+              <span style="display:content" id="comment-para{{comment.id}}">{{comment.comment}}</span><br>
 
               {% if request.user.username == comment.user_name %}
-              <div class="comment-btns" style="margin-top: 10px;">
-                <button class="comment-btn">Edit</button>
+              <div style="display: block;" id="comment-btns{{comment.id}}" class="comment-btns">
+                <button class="comment-btn" onclick="editComment('{{comment.id}}')">Edit</button>
                 <button class="comment-btn" style="background-color: #ff7474;"
                   onclick="deleteComment('{{comment.id}}')">Delete</button>
               </div>

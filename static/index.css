@@ -191,13 +191,24 @@ body {
 }
 .comment-btn {
   padding: 3px 0px;
-  width: 45px;
-  background-color: #7dbe74;
+  margin-top: 10px;
+  width: 55px;
+  background-color: #04aa6d;
   color: white;
   border: 0;
   border-radius: 19px;
   cursor: pointer;
+  font-size: 12px;
+  padding: 3px 0px;
   font-weight: 600;
-  padding: 4px 15px;
-  width: 65px;
+}
+
+.comment-update > button {
+  background-color: #7dbe74;
+  width: 10px;
+}
+
+.comment-update {
+  flex-direction: column;
+  margin-top: 12px;
 }

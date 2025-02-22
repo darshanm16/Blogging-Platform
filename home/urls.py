@@ -13,6 +13,7 @@ urlpatterns = [
     path("index/blog/like/",views.updateLikes,name="Likes"),
     path("index/blog/postComment/",views.blogComment,name="Post Comment"),
     path("index/blog/postComment/",views.blogComment,name="Delete Comment"),
+    path("index/blog/updateComment/",views.updateComment,name="Edit Comment"),
     
     path("profile/",views.profile,name="Profile"),
     path("profile/modify-blog/",views.modifyBlog,name="Delete Blog"),

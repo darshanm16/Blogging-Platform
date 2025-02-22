@@ -260,6 +260,20 @@ def updateLikes(request):
             return JsonResponse({'likes':blog.likes}, status=200)
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+@csrf_exempt
+def updateComment(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        comment_id = data.get('id')
+        comment_content = data.get('comment')
+        comment = Comments.objects.get(id=comment_id)
+        comment.comment = comment_content
+        comment.save()
+        return JsonResponse({'comment': comment.comment}, status=200)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
 from django.db.models import Sum
 
 def profile(request):

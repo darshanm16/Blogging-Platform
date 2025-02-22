@@ -1,3 +1,52 @@
+function editComment(id) {
+  var comment = document.getElementById("comment-para" + id);
+  var editComment = `
+                <div style="display: flex;margin-bottom: 0;" id="comment-edit${id}"
+                class="comment-input-container comment-update">
+                <input type="text" id="comment-input${id}" class="comment-input" value="${comment.innerText}">
+                <div id="commentedit-btns${id}" class="comment-btns">
+                  <button class="comment-btn" style="background-color: #ff7474;" onclick="cancelEdit(${id})">Cancel</button>
+                  <button class="comment-btn" style="background-color: #1877f2;" onclick="updateComment(${id})">Update</button>
+                </div>
+              </div>`;
+  comment.style.display = "none";
+  comment.insertAdjacentHTML("afterend", editComment);
+  var commentBtns = document.getElementById("comment-btns" + id);
+  commentBtns.style.display = "none";
+}
+
+function cancelEdit(id) {
+  var commentEdit = document.getElementById("comment-edit" + id);
+  var comment = document.getElementById("comment-para" + id);
+  var commentBtns = document.getElementById("comment-btns" + id);
+  commentEdit.remove();
+  comment.style.display = "contents";
+  commentBtns.style.display = "block";
+}
+
+function updateComment(id) {
+  var commentInput = document.getElementById("comment-input" + id).value.trim();
+  if (!commentInput) {
+    return;
+  }
+  fetch("/index/blog/updateComment/", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id, comment: commentInput }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      var comment = document.getElementById("comment-para" + id);
+      comment.innerText = data.comment;
+      cancelEdit(id);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
 function deleteComment(id) {
   var comment = document.getElementById("comment" + id);
   if (
@@ -48,10 +97,18 @@ function postComment(id) {
       newComment.innerHTML = `
         <div class="comment-content">
           <strong>${data.user_name || "Anonymous"}</strong><br>
-          <span>${data.comment || "No content"}</span>
-          <div class="comment-btns" style="margin-top: 10px;">
-            <button class="comment-btn">Edit</button>
-            <button class="comment-btn" style="background-color: #ff7474;" onclick="deleteComment('${data.comment_id}')">Delete</button>
+          <span  style="display:content" id="comment-para${data.comment_id}">${
+        data.comment || "No content"
+      }</span>
+          <div style="display: block;" id="comment-btns${
+            data.comment_id
+          }" class="comment-btns">
+            <button class="comment-btn" onclick="editComment('${
+              data.comment_id
+            }')">Edit</button>
+            <button class="comment-btn" style="background-color: #ff7474;" onclick="deleteComment('${
+              data.comment_id
+            }')">Delete</button>
           </div>
         </div>
       `;
