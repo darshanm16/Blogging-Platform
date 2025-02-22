@@ -283,14 +283,16 @@ def profile(request):
     total_likes = data.aggregate(Sum('likes'))['likes__sum']
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
+    total_comments=0
     for blog in d:
         blog['date'] = datetime.strptime(blog['date'], '%Y-%m-%d').strftime('%b %d, %Y')
         blog['comments'] = Comments.objects.filter(blog_id=blog['id']).order_by('-id')
         blog['no_of_comments'] = len(blog['comments'])
+        total_comments+=blog['no_of_comments']
     if str(request.user)=="admin":
-        return render(request,'adminpage.html',{'blogs': d,'total_likes':total_likes})
+        return render(request,'adminpage.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments})
 
-    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes})
+    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments})
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt

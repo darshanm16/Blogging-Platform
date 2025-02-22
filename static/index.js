@@ -156,16 +156,6 @@ function readmore(id) {
   }
 }
 
-// Previous JavaScript functionality remains
-document.querySelectorAll(".action-btn").forEach((button) => {
-  button.addEventListener("click", function () {
-    if (this.textContent.includes("Like")) {
-      this.style.color =
-        this.style.color === "rgb(24, 119, 242)" ? "#65676b" : "#1877f2";
-    }
-  });
-});
-
 // New comment functionality
 function setupPostInteractions(post) {
   // Comment toggle

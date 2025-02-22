@@ -1,3 +1,27 @@
+function cancelEditprofile() {
+  document.getElementById("edit-profile").style.display = "none";
+}
+
+function editProfile() {
+  document.getElementById("edit-profile").style.display = "flex";
+}
+
+// New comment functionality
+function setupPostInteractions(post) {
+  // Comment toggle
+  const commentToggle = post.querySelector(".comment-toggle");
+  const commentsSection = post.querySelector(".comments-section");
+  if (commentToggle && commentsSection) {
+    commentToggle.addEventListener("click", () => {
+      commentsSection.classList.toggle("show");
+    });
+  }
+}
+
+// Set up interactions for existing posts
+document.querySelectorAll(".post-card").forEach(setupPostInteractions);
+
+
 function readmore(id) {
   var blog = document.getElementsByClassName("post-content" + id)[0];
   var readMoreButton = document.getElementsByClassName("readmore" + id)[0];
@@ -10,13 +34,6 @@ function readmore(id) {
     readMoreButton.innerHTML = "Read more...";
   }
 }
-
-// Edit Profile Button
-document
-  .querySelector(".edit-profile-btn")
-  .addEventListener("click", function () {
-    alert("Edit profile functionality would go here!");
-  });
 
 // Post menu functionality
 document.querySelectorAll(".post-menu-btn").forEach((button) => {
@@ -50,7 +67,7 @@ function editPost(id) {
   ).textContent;
   let content = document.getElementById("blog-content" + id).innerHTML;
   content = content.replace(/<br>/g, "\n");
-  document.getElementById("edited-content").value = content;
+  document.getElementById("edited-content").value = content.trim();
 }
 
 function closeEditModal() {
@@ -59,12 +76,8 @@ function closeEditModal() {
 }
 
 function saveEdit() {
-  var title = document
-    .getElementById("edited-title")
-    .value.trim();
-  var content = document
-    .getElementById("edited-content")
-    .value.trim();
+  var title = document.getElementById("edited-title").value.trim();
+  var content = document.getElementById("edited-content").value.trim();
 
   if (!title || !content) {
     alert("Title or content element not found.");
@@ -76,7 +89,11 @@ function saveEdit() {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ id: currentEditPost, title: title, content: content }),
+    body: JSON.stringify({
+      id: currentEditPost,
+      title: title,
+      content: content,
+    }),
   })
     .then((response) => {
       if (response.ok) {
@@ -134,7 +151,6 @@ document.addEventListener("keydown", (e) => {
     closeEditModal();
   }
 });
-
 
 function updateAnanymous(id) {
   fetch("/profile/modify-anonymous/", {

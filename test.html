@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Form</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --background-color: #f3f4f6;
+            --card-background: #ffffff;
+            --text-color: #1f2937;
+            --border-color: #e5e7eb;
+            --focus-ring: #93c5fd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-color);
+            text-align: center;
+            padding: 8px 0px;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            background-color: var(--card-background);
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: none;
+        }
+
+        /* Updated Multi-Select Styles */
+        .multi-select-container {
+            position: relative;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--card-background);
+            padding: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .selected-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            min-height: 38px;
+            align-items: center;
+        }
+
+        .selected-option {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .remove-option {
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .search-input {
+            width: calc(100% - 16px);
+            margin: 8px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .dropdown div {
+            padding: 10px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .dropdown div:hover {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        #close-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 30px;
+            padding: 0;
+            background-color: white;
+            color: black;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header">
+            <h2>User Profile Form</h2>
+            <button id="close-btn">×</button>
+        </div>
+        <form id="userForm">
+
+            <div class="form-group">
+                <label>Expertise</label>
+                <div class="multi-select-container" id="expertiseContainer">
+                    <div class="selected-options" id="selectedOptions"></div>
+                    <div class="dropdown" id="dropdown">
+                        <input type="text" id="searchExpertise" placeholder="Search expertise..." class="search-input">
+                        <div data-value="Cardiology">Cardiology</div>
+                        <div data-value="Neurology">Neurology</div>
+                        <div data-value="Surgery">Surgery</div>
+                        <div data-value="Pediatrics">Pediatrics</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Role</label>
+                <input type="text" name="" id="" placeholder="Tech Enthusiast & Developer">
+            </div>
+
+            <div class="form-group">
+                <label for="about">About</label>
+                <textarea id="about" name="about" placeholder="Tell us about yourself..."></textarea>
+            </div>
+
+
+            <button type="submit">Save Profile</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const expertiseContainer = document.getElementById("expertiseContainer");
+            const selectedOptions = document.getElementById("selectedOptions");
+            const dropdown = document.getElementById("dropdown");
+            const searchInput = document.getElementById("searchExpertise");
+
+            expertiseContainer.addEventListener("click", function (event) {
+                dropdown.style.display = "block";
+                searchInput.focus();
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!expertiseContainer.contains(event.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+
+            dropdown.querySelectorAll("div[data-value]").forEach(option => {
+                option.addEventListener("click", function () {
+                    const value = this.getAttribute("data-value");
+                    if ([...selectedOptions.children].some(child => child.dataset.value === value)) return;
+
+                    const span = document.createElement("span");
+                    span.classList.add("selected-option");
+                    span.dataset.value = value;
+                    span.textContent = value;
+
+                    const removeBtn = document.createElement("span");
+                    removeBtn.classList.add("remove-option");
+                    removeBtn.textContent = " ×";
+                    removeBtn.onclick = function () {
+                        selectedOptions.removeChild(span);
+                    };
+
+                    span.appendChild(removeBtn);
+                    selectedOptions.appendChild(span);
+                    dropdown.style.display = "none";
+                });
+            });
+
+            searchInput.addEventListener("input", function () {
+                const query = searchInput.value.toLowerCase();
+                dropdown.querySelectorAll("div[data-value]").forEach(option => {
+                    option.style.display = option.textContent.toLowerCase().includes(query) ? "block" : "none";
+                });
+            });
+
+            document.getElementById("userForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                alert("Profile saved successfully!");
+            });
+        });
+    </script>
+</body>
+
+</html>

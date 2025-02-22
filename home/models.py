@@ -2,6 +2,12 @@ from django.db import models
 
 # Create your models here.
 
+class Userdetails(models.Model):
+    dob=models.DateField()
+    role=models.CharField(max_length=100)
+    about=models.TextField(max_length=1000)
+    expertise=models.JSONField(default=list)
+
 class Blogs(models.Model):
     user_name=models.CharField(max_length=100)
     title=models.CharField(max_length=100)
