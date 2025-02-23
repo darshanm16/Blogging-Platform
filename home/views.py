@@ -187,6 +187,13 @@ def index(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)
     
+    if request.method=="POST":
+        user_name =request.user
+        content =request.POST.get('content')  
+        blog=Blogs(user_name=user_name,content=content,date=datetime.today())     
+        blog.save()
+        messages.success(request, "Posted Successfully!")
+    
     data=Blogs.objects.exclude(user_name=request.user).values().order_by('-id')
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
@@ -197,7 +204,28 @@ def index(request):
         blog['comments'] = Comments.objects.filter(blog_id=blog['id']).order_by('-id')
         blog['no_of_comments'] = len(blog['comments'])
     
-    return render(request,'index.html',{'blogs': d})
+    trending = Blogs.objects.exclude(user_name=request.user).order_by('-likes')[:5]
+    
+    return render(request,'index.html',{'blogs': d,'trending': trending})
+
+@csrf_exempt
+def getBlog(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            blog_id = data.get('id')
+            blog = Blogs.objects.get(id=blog_id)
+            return JsonResponse({'title': blog.title, 'content': blog.content}, status=200)
+        
+        except Blogs.DoesNotExist:
+            return JsonResponse({'error': 'Blog not found.'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 @csrf_exempt
 def blogComment(request):

@@ -1,3 +1,26 @@
+function showBlog(id) {
+  fetch("/index/blog/getBlog/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      document.getElementById("showtitle").innerText = data.title;
+      document.getElementById("showcontent").innerText = data.content;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  document.getElementById("edit-profile").style.display = "flex";
+}
+
+function closeBlog() {
+  document.getElementById("edit-profile").style.display = "none";
+}
+
 function editComment(id) {
   var comment = document.getElementById("comment-para" + id);
   var editComment = `

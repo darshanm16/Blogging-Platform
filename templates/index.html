@@ -30,8 +30,11 @@
       <!-- Create post section remains the same -->
       <div class="create-post">
         <h3>Create Post</h3>
-        <textarea class="post-input" placeholder="What's on your mind?"></textarea>
-        <button class="btn btn-primary" style="margin-top: 10px;">Publish</button>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <textarea name="content" class="post-input" placeholder="What's on your mind?"></textarea>
+          <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Publish</button>
+        </form>
       </div>
 
       <!-- Updated post card with comments section -->
@@ -45,13 +48,13 @@
               <span class="span">Ananymous User
                 {% if blog.user_name == "blgrhelpline" %}
                 <img src="\static\verified.png" alt="verified" style="width: 10px; height: 11px;">
-                {% endif %} 
+                {% endif %}
               </span>
               {% else %}
               <span class="span">{{blog.user_name}}
                 {% if blog.user_name == "admin" %}
                 <img src="\static\verified.png" alt="verified" style="width: 10px; height: 11px;">
-                {% endif %} 
+                {% endif %}
               </span>
               {% endif %}
               | {{ blog.date }}</small>
@@ -111,26 +114,26 @@
 
     <!-- Right sidebar remains the same -->
     <aside class="sidebar">
-      <h3 style="margin: 12px 0;">Trending Blogs</h3>
-      <div class="trending-item">
+      <h3 style="margin: 12px 0;">Most liked blogs</h3>
+      {% for trend in trending %}
+      <div onclick="showBlog('{{trend.id}}')" class="trending-item">
         <div>
-          <strong>Tech Daily</strong>
-          <p>Latest tech news and reviews</p>
+          <strong>{{trend.title}}</strong>
+          <p>{{ trend.content|truncatewords:5 }}</p>
         </div>
       </div>
-      <div class="trending-item">
-        <div>
-          <strong>Code Masters</strong>
-          <p>Programming tutorials and tips</p>
-        </div>
-      </div>
-      <div class="trending-item">
-        <div>
-          <strong>Tech Daily</strong>
-          <p>Latest tech news and reviews</p>
-        </div>
-      </div>
+      {% endfor %}
     </aside>
+  </div>
+
+  <div id="edit-profile">
+    <div class="container">
+      <div id="header">
+        <h2 id="showtitle" style="margin: 0;"></h2>
+        <button id="close-btn" onclick="closeBlog()">×</button>
+      </div>
+      <p id="showcontent"></p>
+    </div>
   </div>
 </body>
 

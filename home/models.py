@@ -10,7 +10,7 @@ class Userdetails(models.Model):
 
 class Blogs(models.Model):
     user_name=models.CharField(max_length=100)
-    title=models.CharField(max_length=100)
+    title=models.CharField(max_length=100,default='Blog')
     content =models.TextField(max_length=10000)
     date =models.DateField()
     ananymous=models.BooleanField(default=False)

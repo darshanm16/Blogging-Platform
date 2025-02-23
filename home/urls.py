@@ -14,6 +14,7 @@ urlpatterns = [
     path("index/blog/postComment/",views.blogComment,name="Post Comment"),
     path("index/blog/postComment/",views.blogComment,name="Delete Comment"),
     path("index/blog/updateComment/",views.updateComment,name="Edit Comment"),
+    path("index/blog/getBlog/",views.getBlog,name="Get Blog"),
     
     path("profile/",views.profile,name="Profile"),
     path("profile/modify-blog/",views.modifyBlog,name="Delete Blog"),

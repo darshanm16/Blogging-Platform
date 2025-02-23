@@ -56,15 +56,14 @@
   </div>
 
   {% if messages %} {% for message in messages %}
-
+  
   <label>
     <input type="checkbox" class="alertCheckbox" autocomplete="off" />
     <div class="alert success">
       <span class="alertClose">X</span>
       <span class="alertText">{{ message }}<br class="clear" /></span>
     </div>
-  </label>
-
+  </label> 
   {% endfor %} {% endif %} {% block body %} {% endblock body %}
 
   <script src="\static\nav.js"></script>
