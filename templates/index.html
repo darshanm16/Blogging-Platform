@@ -80,7 +80,11 @@
           </button>
           <button id="n-comments{{blog.id}}" class="action-btn comment-toggle">💬 Comment
             ({{blog.no_of_comments}})</button>
-          <button id="" class="action-btn">💾 Save</button>
+          {% if blog.save == True %}
+          <button id="save{{blog.id}}" onclick="saveblog('{{blog.id}}')" class="action-btn" style="color: #0de300;">💾 Saved</button>
+          {% else %}
+          <button id="save{{blog.id}}" onclick="saveblog('{{blog.id}}')" class="action-btn">💾 Save</button>
+          {% endif %}
         </div>
         <div id="comments-section{{blog.id}}" class="comments-section">
           <div class="comment-input-container">

@@ -1,3 +1,35 @@
+function removeSavedblog(id) {
+  fetch("/profile/remove-saved-blog/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        document.getElementById("saved-blog" + id).remove();
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while removing the blog.");
+    });
+}
+
+function showSavedBlogs() {
+  document.getElementById("savedblogshead").style.border = "1px solid black";
+  document.getElementById("myblogshead").style.border = "1px solid white";
+  document.getElementById("myblogs").style.display = "none";
+  document.getElementById("savedblogs").style.display = "block";
+}
+function showMyBlogs() {
+  document.getElementById("myblogshead").style.border = "1px solid black";
+  document.getElementById("savedblogshead").style.border = "1px solid white";
+  document.getElementById("savedblogs").style.display = "none";
+  document.getElementById("myblogs").style.display = "block";
+}
+
 function cancelEditprofile() {
   document.getElementById("edit-profile").style.display = "none";
 }
@@ -20,7 +52,6 @@ function setupPostInteractions(post) {
 
 // Set up interactions for existing posts
 document.querySelectorAll(".post-card").forEach(setupPostInteractions);
-
 
 function readmore(id) {
   var blog = document.getElementsByClassName("post-content" + id)[0];

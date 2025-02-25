@@ -1,3 +1,27 @@
+function saveblog(id) {
+  fetch("/index/blog/saveblog/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status == "saved") {
+        document.getElementById("save" + id).innerText = "💾 Saved";
+        document.getElementById("save" + id).style.color = "#0de300";
+      }
+      if (data.status == "removed") {
+        document.getElementById("save" + id).innerText = "💾 Save";
+        document.getElementById("save" + id).style.color = "#000";
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
 function showBlog(id) {
   fetch("/index/blog/getBlog/", {
     method: "POST",

@@ -86,81 +86,150 @@
     </aside>
 
     <main>
-      {% if not blogs %}
-      <div class="post-card">
-        <a href="/writeblog" style="text-decoration: none;">
-          <h3 style="text-align: center; color:#1877f2">Click here to write your first blog...!</h3>
-        </a>
-      </div>
-      {% endif %}
-      {% for blog in blogs %}
-      <div class="post-card">
-        <div class="post-header">
-          <div class="post-meta">
-            <strong id="blog-title{{blog.id}}">{{blog.title}}</strong>
-            <div style="display: flex;gap: 10px;margin-top: 6px;">
-              {% if blog.ananymous %}
-              <img src="\static\hidden.png" width="18" alt="" srcset="">
-              {% endif %}
-              <span style="font-size: 13px;font-weight: 600;">{{ blog.date }}</span>
-            </div>
-          </div>
-          <div class="post-menu">
-            <button class="post-menu-btn" aria-label="Post options">⋮</button>
-            <div class="post-menu-content">
-              <div class="menu-item" onclick="editPost('{{blog.id}}')">
-                ✏️ Edit Post
-              </div>
-              <div class="menu-item delete-confirm" onclick="deletePost('{{blog.id}}')">
-                🗑️ Delete Post
-              </div>
-              <div class="menu-item" onclick="updateAnanymous('{{blog.id}}')">
-                {% if blog.ananymous %}
-                📢 Make Public
-                {% else %}
-                👽 Make ananymous
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {% if blog.content|length > 303 %}
-        <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}">{{blog.content|linebreaksbr}}</p>
-        <a class="readmore readmore{{blog.id}}" onclick="readmore('{{blog.id}}')">Read more...</a>
-        {% else %}
-        <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}" style="height: auto;">
-          {{blog.content|linebreaksbr}}</p>
+      <div id="blog-menu">
+        <div id="myblogshead" class="post-card blog-menu-item" onclick="showMyBlogs()" style="border: 1px solid black;">
+          <h3 style="text-align: center; color:#1877f2; margin:0">My Blogs</h3>
+        </div>
+        <div id="savedblogshead" class="post-card blog-menu-item" onclick="showSavedBlogs()"
+          style="border:1px solid white">
+          <h3 style="text-align: center; color:#1877f2; margin:0">Saved Blogs</h3>
+        </div>
+      </div>
+
+      <div id="myblogs" style="display: block;">
+        {% if not blogs %}
+        <div class="post-card">
+          <a href="/writeblog" style="text-decoration: none;">
+            <h3 style="text-align: center; color:#1877f2">Write your first blog...!</h3>
+          </a>
+        </div>
         {% endif %}
-        <div class="post-actions">
-          <button class="action-btn like-btn">❤️ {{blog.likes}} Likes</button>
-          <button class="action-btn comment-toggle" onclick="showComments('{{blog.id}}')">💬 {{ blog.no_of_comments }}
-            Comments</button>
-        </div>
-
-        <div id="comments-section{{blog.id}}" class="comments-section">
-          {% for comment in blog.comments %}
-          <div id="comment{{comment.id}}" class="comment">
-            <div class="comment-content">
-              <strong>{{comment.user_name}}</strong><br>
-
-              <span style="display:content" id="comment-para{{comment.id}}">{{comment.comment}}</span><br>
-
-              {% if request.user.username == comment.user_name %}
-              <div style="display: block;" id="comment-btns{{comment.id}}" class="comment-btns">
-                <button class="comment-btn" onclick="editComment('{{comment.id}}')">Edit</button>
-                <button class="comment-btn" style="background-color: #ff7474;"
-                  onclick="deleteComment('{{comment.id}}')">Delete</button>
+        {% for blog in blogs %}
+        <div class="post-card">
+          <div class="post-header">
+            <div class="post-meta">
+              <strong id="blog-title{{blog.id}}">{{blog.title}}</strong>
+              <div style="display: flex;gap: 10px;margin-top: 6px;">
+                {% if blog.ananymous %}
+                <img src="\static\hidden.png" width="18" alt="" srcset="">
+                {% endif %}
+                <span style="font-size: 13px;font-weight: 600;">{{ blog.date }}</span>
               </div>
-              {% endif %}
-
+            </div>
+            <div class="post-menu">
+              <button class="post-menu-btn" aria-label="Post options">⋮</button>
+              <div class="post-menu-content">
+                <div class="menu-item" onclick="editPost('{{blog.id}}')">
+                  ✏️ Edit Blog
+                </div>
+                <div class="menu-item delete-confirm" onclick="deletePost('{{blog.id}}')">
+                  🗑️ Delete Blog
+                </div>
+                <div class="menu-item" onclick="updateAnanymous('{{blog.id}}')">
+                  {% if blog.ananymous %}
+                  📢 Make Public
+                  {% else %}
+                  👽 Make ananymous
+                  {% endif %}
+                </div>
+              </div>
             </div>
           </div>
-          {% endfor %}
-        </div>
 
+          {% if blog.content|length > 303 %}
+          <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}">{{blog.content|linebreaksbr}}</p>
+          <a class="readmore readmore{{blog.id}}" onclick="readmore('{{blog.id}}')">Read more...</a>
+          {% else %}
+          <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}" style="height: auto;">
+            {{blog.content|linebreaksbr}}</p>
+          {% endif %}
+          <div class="post-actions">
+            <button class="action-btn like-btn">❤️ {{blog.likes}} Likes</button>
+            <button class="action-btn comment-toggle" onclick="showComments('{{blog.id}}')">💬 {{ blog.no_of_comments }}
+              Comments</button>
+          </div>
+
+          {% if blog.comments %}
+          <div id="comments-section{{blog.id}}" class="comments-section">
+            {% for comment in blog.comments %}
+            <div id="comment{{comment.id}}" class="comment">
+              <div class="comment-content">
+                <strong>{{comment.user_name}}</strong><br>
+
+                <span style="display:content" id="comment-para{{comment.id}}">{{comment.comment}}</span><br>
+
+                {% if request.user.username == comment.user_name %}
+                <div style="display: block;" id="comment-btns{{comment.id}}" class="comment-btns">
+                  <button class="comment-btn" onclick="editComment('{{comment.id}}')">Edit</button>
+                  <button class="comment-btn" style="background-color: #ff7474;"
+                    onclick="deleteComment('{{comment.id}}')">Delete</button>
+                </div>
+                {% endif %}
+
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+
+      <div id="savedblogs" style="display: none;">
+        {% if not saved_blogs %}
+        <div class="post-card">
+          <a href="/index" style="text-decoration: none;">
+            <h3 style="text-align: center; color:#1877f2">No blogs saved yet...!</h3>
+          </a>
+        </div>
+        {% endif %}
+        {% for blog in saved_blogs %}
+        <div id="saved-blog{{blog.id}}" class="post-card">
+          <div class="post-header">
+            <div class="post-meta">
+              <strong id="blog-title{{blog.id}}">{{blog.title}}</strong>
+              <div style="display: flex;gap: 10px;margin-top: 6px;">
+                <span style="font-size: 13px;font-weight: 600;">
+                  {% if blog.ananymous %}
+                  <span class="span">Ananymous User
+                    {% if blog.user_name == "blgrhelpline" %}
+                    <img src="\static\verified.png" alt="verified" style="width: 10px; height: 11px;">
+                    {% endif %}
+                  </span>
+                  {% else %}
+                  <span class="span">{{blog.user_name}}
+                    {% if blog.user_name == "admin" %}
+                    <img src="\static\verified.png" alt="verified" style="width: 10px; height: 11px;">
+                    {% endif %}
+                  </span>
+                  {% endif %}
+                  | {{ blog.date }}</span>
+              </div>
+            </div>
+            <div class="post-menu">
+              <button class="post-menu-btn" aria-label="Post options">⋮</button>
+              <div class="post-menu-content">
+                <div class="menu-item" onclick="removeSavedblog('{{blog.id}}')">
+                  ❌ Remove Blog
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% if blog.content|length > 303 %}
+          <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}">{{blog.content|linebreaksbr}}</p>
+          <a class="readmore readmore{{blog.id}}" onclick="readmore('{{blog.id}}')">Read more...</a>
+          {% else %}
+          <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}" style="height: auto;">
+            {{blog.content|linebreaksbr}}</p>
+          {% endif %}         
+
+        </div>
+        {% endfor %}
+      </div>
+
     </main>
   </div>
 

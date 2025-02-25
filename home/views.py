@@ -29,6 +29,7 @@ def verify_otp(request):
             login(request,user)
             send_welcome_email(user=user)
             messages.success(request, 'Signup successful! check your mail for confirmation')
+            Details.objects.create(user_name=request.user)
             return redirect(profile)
         else:
             messages.error(request, 'Invalid OTP! Please try again.')
@@ -197,13 +198,17 @@ def index(request):
     data=Blogs.objects.exclude(user_name=request.user).values().order_by('-id')
     serializer=BlogSerializer(data,many=True)
     d=serializer.data
+    details=Details.objects.filter(user_name=request.user).first()
+    saved_blogs = details.saved if details else []
     for blog in d:
         if Likes.objects.filter(blog_id=blog['id'], user_name=request.user).exists():
             blog['liked'] = True
         blog['date'] = datetime.strptime(blog['date'], '%Y-%m-%d').strftime('%b %d, %Y')
         blog['comments'] = Comments.objects.filter(blog_id=blog['id']).order_by('-id')
         blog['no_of_comments'] = len(blog['comments'])
-    
+        blog['save']=False
+        if blog['id'] in saved_blogs:
+            blog['save'] = True
     trending = Blogs.objects.exclude(user_name=request.user).order_by('-likes')[:5]
     
     return render(request,'index.html',{'blogs': d,'trending': trending})
@@ -302,6 +307,28 @@ def updateComment(request):
         return JsonResponse({'comment': comment.comment}, status=200)
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+@csrf_exempt
+def saveBlog(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        blog_id = data.get('id')
+        blog_id = int(blog_id)
+        details = Details.objects.filter(user_name=request.user).first()
+        saved_blogs = details.saved
+        status = ""
+        if blog_id in saved_blogs:
+            saved_blogs.remove(blog_id)
+            status = "removed"
+        else:
+            saved_blogs.insert(0,blog_id)
+            status = "saved"
+        details.saved = saved_blogs
+        details.save()
+        return JsonResponse({'status': status}, status=200)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
 from django.db.models import Sum
 
 def profile(request):
@@ -319,8 +346,12 @@ def profile(request):
         total_comments+=blog['no_of_comments']
     if str(request.user)=="admin":
         return render(request,'adminpage.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments})
+    saved_blogs_id = Details.objects.filter(user_name=request.user).first().saved
+    saved_blogs = []
+    for blog_id in saved_blogs_id:
+        saved_blogs.append(Blogs.objects.get(id=blog_id))
 
-    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments})
+    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments, 'saved_blogs': saved_blogs})
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -377,6 +408,22 @@ def updateAnanymous(request):
         blog.save()
         return JsonResponse({'ananymous': blog.ananymous}, status=200)
 
+@csrf_exempt
+def removeSavedBlog(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        blog_id = data.get('id')
+        blog_id = int(blog_id)
+        details = Details.objects.filter(user_name=request.user).first()
+        saved_blogs = details.saved
+        saved_blogs.remove(blog_id)
+        details.saved = saved_blogs
+        details.save()
+        messages.success(request, "Blog removed Successfully!")
+        return JsonResponse({'message': 'Blog removed successfully.'}, status=200)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 def writeblog(request):
     if isinstance(request.user, AnonymousUser):

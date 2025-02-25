@@ -5,4 +5,4 @@ from home.models import *
 admin.site.register(Blogs)
 admin.site.register(Likes)
 admin.site.register(Comments)
-admin.site.register(Userdetails)
+admin.site.register(Details)

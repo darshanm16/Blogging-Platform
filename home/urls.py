@@ -15,10 +15,12 @@ urlpatterns = [
     path("index/blog/postComment/",views.blogComment,name="Delete Comment"),
     path("index/blog/updateComment/",views.updateComment,name="Edit Comment"),
     path("index/blog/getBlog/",views.getBlog,name="Get Blog"),
+    path("index/blog/saveblog/",views.saveBlog,name="Save Blog"),
     
     path("profile/",views.profile,name="Profile"),
     path("profile/modify-blog/",views.modifyBlog,name="Delete Blog"),
     path("profile/modify-anonymous/",views.updateAnanymous,name="Delete Blog"),
+    path("profile/remove-saved-blog/",views.removeSavedBlog,name="Remove Blog"),
     
     
     path("logout/",views.logout_user,name="Logout"),
