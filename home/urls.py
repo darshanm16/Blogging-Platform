@@ -21,6 +21,8 @@ urlpatterns = [
     path("profile/modify-blog/",views.modifyBlog,name="Delete Blog"),
     path("profile/modify-anonymous/",views.updateAnanymous,name="Delete Blog"),
     path("profile/remove-saved-blog/",views.removeSavedBlog,name="Remove Blog"),
+    path("profile/editprofile/",views.editProfile,name="Edit Profile"),
+    path("profile/change-old-password/",views.changeOldPassword,name="Change Old Password"),
     
     
     path("logout/",views.logout_user,name="Logout"),

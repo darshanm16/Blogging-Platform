@@ -5,9 +5,9 @@ from django.db import models
 class Details(models.Model):
     user_name=models.CharField(max_length=100)
     dob=models.DateField(default='2000-01-01')
-    role=models.CharField(max_length=100,default='Blogger')
-    about=models.TextField(max_length=1000,default='Add about you')
-    expertise=models.JSONField(default=list)
+    role=models.CharField(max_length=100,default='Set your role')
+    about=models.TextField(max_length=1000,default='Tell me about yourself...')
+    badges=models.JSONField(default=list)
     saved=models.JSONField(default=list)
     
     def __str__(self):

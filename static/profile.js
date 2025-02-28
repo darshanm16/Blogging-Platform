@@ -1,3 +1,84 @@
+function changebyoldpass() {
+  var oldpass = document.getElementById("oldpass").value;
+  var newpass = document.getElementById("newpass").value;
+  var confirmpass = document.getElementById("confirmpass").value;
+
+  if (!oldpass || !newpass || !confirmpass) {
+    alert("All fields are required.");
+    return;
+  }
+
+  if (newpass !== confirmpass) {
+    alert("Passwords do not match.");
+    return;
+  }
+  fetch("/profile/change-old-password/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ oldpass: oldpass, newpass: newpass }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        location.reload();
+        alert("Password changed successfully.");
+        closechangepass();
+      } else {
+        return response.json().then((data) => {
+          alert(data.message || "Failed to change the password.");
+          document.getElementById("oldpass").value = "";
+          document.getElementById("oldpass").focus();
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while changing the password.");
+    });
+}
+
+function showchangepass() {
+  document.getElementById("changepass").style.display = "flex";
+}
+
+function closechangepass() {
+  document.getElementById("changepass").style.display = "none";
+}
+
+let byotp = `        <div class="form-group" id="byotp">
+          <label for="passotp">OTP Verification</label>
+          <div style="display: flex ;gap: 12px;">
+            <input type="passotp" id="passotp" name="passotp" maxlength="6" style="flex: 3;">
+            <button id="button" type="button" style="flex: 1;">Send otp</button>
+            <button id="button" type="button" style="flex: 1;background-color:#04aa6d">Verify</button>
+          </div>
+          <p id="otpmsg"></p>
+        </div>`;
+let byoldpass = `        <div class="form-group" id="byoldpass">
+          <label for="oldpass">Old Password</label>
+          <input type="password" id="oldpass" name="oldpass">
+        </div>`;
+
+function changemethod() {
+  if (document.getElementById("byotp")) {
+    document.getElementById("byotp").remove();
+    document.getElementById("method").insertAdjacentHTML("afterend", byoldpass);
+    document
+      .getElementsByClassName("passchangebtn")[0]
+      .setAttribute("onclick", "changebyoldpass()");
+    return;
+  }
+  if (document.getElementById("byoldpass")) {
+    document.getElementById("byoldpass").remove();
+    document.getElementById("method").insertAdjacentHTML("afterend", byotp);
+    document
+      .getElementsByClassName("passchangebtn")[0]
+      .setAttribute("onclick", "changebyotp()");
+    return;
+  }
+}
+
 function removeSavedblog(id) {
   fetch("/profile/remove-saved-blog/", {
     method: "POST",

@@ -350,8 +350,9 @@ def profile(request):
     saved_blogs = []
     for blog_id in saved_blogs_id:
         saved_blogs.append(Blogs.objects.get(id=blog_id))
+    details=Details.objects.filter(user_name=request.user).first()
 
-    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments, 'saved_blogs': saved_blogs})
+    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments, 'saved_blogs': saved_blogs,'details':details})
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -421,9 +422,45 @@ def removeSavedBlog(request):
         saved_blogs.remove(blog_id)
         details.saved = saved_blogs
         details.save()
-        messages.success(request, "Blog removed Successfully!")
         return JsonResponse({'message': 'Blog removed successfully.'}, status=200)
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+def editProfile(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method=="POST":
+        if request.POST.get('dob')=="":
+            dob=Details.objects.filter(user_name=request.user).first().dob
+        else:
+            dob=request.POST.get('dob')
+        role=request.POST.get('role')
+        about=request.POST.get('about')
+        details = Details.objects.filter(user_name=request.user).first()
+        details.dob = dob
+        details.role = role
+        details.about = about
+        details.save()
+        messages.success(request, "Profile updated successfully!")
+        return redirect(profile)
+    return redirect(profile)
+
+@csrf_exempt
+def changeOldPassword(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method=="POST":
+        data = json.loads(request.body)
+        old_password = data.get('oldpass')
+        new_password = data.get('newpass')
+        user=User.objects.get(username=request.user)
+        if user.check_password(old_password):
+            user.set_password(new_password)
+            user.save()
+            login(request,user)
+            return JsonResponse({},status=200)
+        else:
+            return JsonResponse({'message': 'Incorrect old password!'}, status=405)
+    return redirect(profile)
 
 def writeblog(request):
     if isinstance(request.user, AnonymousUser):

@@ -508,3 +508,21 @@ textarea {
   width: -webkit-fill-available;
   cursor: pointer;
 }
+
+#changepass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#otpmsg {
+  color: red;
+  margin: 7px 0px;
+}

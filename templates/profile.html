@@ -18,6 +18,9 @@
         <div class="menu-item edit-profile-btn" onclick="">
           Make profile private
         </div>
+        <div class="menu-item edit-profile-btn" onclick="showchangepass()">
+          Change Password
+        </div>
         <form action="/logout/" method="post" name="logout">
           {% csrf_token %}
           <div class="menu-item delete-confirm" onClick="document.forms['logout'].submit();">
@@ -29,7 +32,7 @@
 
 
     <h1 style="margin: 0;padding:0">{{request.user.get_full_name}}</h1>
-    <p style="margin: 0;padding:0">Tech Enthusiast & Professional Blogger</p>
+    <p style="margin: 0;padding:0">{{details.role}}</p>
     <div class="profile-stats">
       <div class="stat">
         <div class="stat-number">{{ blogs|length }}</div>
@@ -50,17 +53,13 @@
     <aside class="sidebar">
       <div class="info-section">
         <h3>About</h3>
-        <p>Passionate tech blogger with 5+ years of experience. Sharing insights about web development, AI, and
-          the future of technology.</p>
+        <p>{{details.about}}</p>
       </div>
 
       <div class="info-section">
-        <h3>Expertise</h3>
+        <h3>Badges</h3>
         <div>
-          <span class="badge">Web Development</span>
-          <span class="badge">AI/ML</span>
-          <span class="badge">Cloud Computing</span>
-          <span class="badge">Tech Reviews</span>
+          <span class="badge">No yet earned</span>
         </div>
       </div>
 
@@ -76,7 +75,7 @@
         </div>
         <div class="info-item">
           <span>📅</span>
-          <span>Oct 19, 2004</span>
+          <span>{{details.dob}}</span>
         </div>
         <div class="info-item">
           <span>🌐</span>
@@ -224,7 +223,7 @@
           {% else %}
           <p class="post-content post-content{{blog.id}}" id="blog-content{{blog.id}}" style="height: auto;">
             {{blog.content|linebreaksbr}}</p>
-          {% endif %}         
+          {% endif %}
 
         </div>
         {% endfor %}
@@ -255,39 +254,69 @@
         <h2 style="margin: 0;">Edit Profile</h2>
         <button id="close-btn" onclick="cancelEditprofile()">×</button>
       </div>
-      <form id="userForm">
-
-        <div class="form-group">
-          <label>Expertise</label>
-          <div class="multi-select-container" id="expertiseContainer">
-            <div class="selected-options" id="selectedOptions"></div>
-            <div class="dropdown" id="dropdown">
-              <input type="text" id="searchExpertise" placeholder="Search expertise..." class="search-input">
-              <div data-value="Cardiology">Cardiology</div>
-              <div data-value="Neurology">Neurology</div>
-              <div data-value="Surgery">Surgery</div>
-              <div data-value="Pediatrics">Pediatrics</div>
-            </div>
-          </div>
-        </div>
-
+      <form action="/profile/editprofile/" method="POST" id="userForm">
+        {% csrf_token %}
         <div class="form-group">
           <label for="dob">Date of Birth</label>
-          <input type="date" id="dob" name="dob" required>
+          <input type="date" id="dob" name="dob">
         </div>
 
         <div class="form-group">
           <label for="role">Role</label>
-          <input type="text" name="" id="" placeholder="Tech Enthusiast & Developer">
+          {% if details.role == 'Set your role' %}
+          <input type="text" name="role" id="role" placeholder="Tech Enthusiast & Developer">
+          {% else %}
+          <input type="text" name="role" id="role" value="{{details.role}}" placeholder="Tech Enthusiast & Developer">
+          {% endif %}
         </div>
 
         <div class="form-group">
           <label for="about">About</label>
+          {% if details.about == 'Tell me about yourself...' %}
           <textarea id="about" name="about" placeholder="Tell us about yourself..."></textarea>
+          {% else %}
+          <textarea id="about" name="about" placeholder="Tell us about yourself...">{{details.about}}</textarea>
+          {% endif %}
         </div>
 
 
         <button id="button" type="submit">Save Profile</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="changepass">
+    <div class="container">
+      <form id="changepassform">
+        {% csrf_token %}
+        <div id="header">
+          <h2 style="margin: 0;">Change Password</h2>
+          <button id="close-btn" onclick="closechangepass()">×</button>
+        </div>
+
+        <div id="method">
+          <div class="form-group" id="byoldpass">
+            <label for="oldpass">Old Password</label>
+            <input type="password" id="oldpass" name="oldpass" required>
+          </div>
+        </div>
+
+        <div id="newpassinp">
+          <div class="form-group">
+            <label for="newpass">New Password</label>
+            <input type="password" id="newpass" name="newpass" required>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmpass">Confirm Password</label>
+            <input type="password" id="confirmpass" name="confirmpass" required>
+          </div>
+        </div>
+
+        <div style="display: flex ;gap: 12px;">
+          <button id="button" onclick="changemethod()" type="button">Change Method</button>
+          <button id="button" class="passchangebtn" onclick="changebyoldpass()" type="button">Submit</button>
+        </div>
       </form>
     </div>
   </div>
