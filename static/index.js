@@ -1,3 +1,29 @@
+function showMenu(id) {
+  if (document.getElementById("blogbtns" + id).style.display === "flex") {
+    document.getElementById("blogbtns" + id).style.display = "none";
+  } else {
+    document.getElementById("blogbtns" + id).style.display = "flex";
+  }
+}
+
+function shareBlog(id, title, user_name) {
+  var url = window.location.href;
+  title = title.replace(/ /g, "_");
+  var blog_url = url + "blog/" + title + "/" + id + "/";
+  if (navigator.share) {
+    navigator
+      .share({
+        title: title,
+        text: "Check out this blog post!",
+        url: blog_url,
+      })
+      .catch((error) => console.log("Error sharing:", error));
+  } else {
+    navigator.clipboard.writeText(blog_url);
+    alert("Link copied to clipboard!");
+  }
+}
+
 function saveblog(id) {
   fetch("/index/blog/saveblog/", {
     method: "POST",
@@ -195,11 +221,12 @@ function readmore(id) {
   if (blog_para.style.height === "" || blog_para.style.height === "90px") {
     blog_para.style.height = "auto";
     blog_para.style.overflow = "visible";
-    document.getElementsByClassName("readmore")[0].innerText = "Read less";
+    document.getElementsByClassName("readmore" + id)[0].innerText = "Read less";
   } else {
     blog_para.style.height = "90px";
     blog_para.style.overflow = "hidden";
-    document.getElementsByClassName("readmore")[0].innerText = "Read more...";
+    document.getElementsByClassName("readmore" + id)[0].innerText =
+      "Read more...";
   }
 }
 

@@ -264,3 +264,34 @@ h2 {
   align-items: center;
   z-index: 1000;
 }
+
+.blogmenubtn {
+  display: none;
+}
+
+.blogbtns {
+  display: flex;
+  gap: 20px;
+}
+
+@media (max-width: 540px) {
+  .blogmenubtn {
+    display: flex;
+  }
+  .blogbtns {
+    display: none;
+    gap: 5px; 
+    flex-direction: column;
+    position: absolute;
+    bottom: 39px;
+    right: 0px;
+  }
+  .blogbtns button {
+    border-radius: 5px;
+    border: 1px solid #dadada;
+    padding: 5px;
+    width: 90px;
+    justify-content: center;
+    background-color: white;
+  }
+}

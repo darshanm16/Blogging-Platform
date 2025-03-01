@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogger</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .blog-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-name {
+            font-weight: bold;
+        }
+
+        .blog-content {
+            padding: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .blog-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .blog-title {
+                font-size: 1rem;
+            }
+
+            .blog-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1 class="blog-title" id="postTitle"></h1>
+        </header>
+
+        <div class="blog-meta">
+            <div class="blog-author">
+                <span class="author-name" id="authorName"></span>
+            </div>
+            <div class="blog-date" id="postDate"></div>
+        </div>
+
+        <p class="blog-content" id="postContent"></p>
+</body>
+
+</html>

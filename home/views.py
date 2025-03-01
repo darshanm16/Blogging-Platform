@@ -348,8 +348,16 @@ def profile(request):
         return render(request,'adminpage.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments})
     saved_blogs_id = Details.objects.filter(user_name=request.user).first().saved
     saved_blogs = []
+    not_found = []
     for blog_id in saved_blogs_id:
+        if not Blogs.objects.filter(id=blog_id).exists():
+            not_found.append(blog_id)
+            continue
         saved_blogs.append(Blogs.objects.get(id=blog_id))
+    if not_found:
+        for blog_id in not_found:
+            saved_blogs_id.remove(blog_id)
+        Details.objects.filter(user_name=request.user).update(saved=saved_blogs_id)
     details=Details.objects.filter(user_name=request.user).first()
 
     return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments, 'saved_blogs': saved_blogs,'details':details})
@@ -544,10 +552,6 @@ def writeblog(request):
     
     return render(request,'writeblog.html')
 
-def contact(request):
-    return render(request,'contact.html')
-
-
 def send_welcome_email(user):
     subject = 'Welcome to Blogger - Your Account is Ready!'
     message = f"""
@@ -582,3 +586,30 @@ The Blogger Team
         [user.email],
         fail_silently=True,
     )
+
+
+def ananymousGetSharedblog(request,title,id):
+    data=Blogs.objects.get(id=id)
+    title=title.replace('_',' ')
+    if title != data.title:
+        return HttpResponse('Invalid URL!')
+    if isinstance(request.user, AnonymousUser):
+        return render(request,'sharedBlog.html',{'blog': data })
+    else:
+        data=Blogs.objects.filter(id=id)
+        serializer=BlogSerializer(data,many=True)
+        d=serializer.data
+        details=Details.objects.filter(user_name=request.user).first()
+        saved_blogs = details.saved if details else []
+        for blog in d:
+            if Likes.objects.filter(blog_id=blog['id'], user_name=request.user).exists():
+                blog['liked'] = True
+            blog['date'] = datetime.strptime(blog['date'], '%Y-%m-%d').strftime('%b %d, %Y')
+            blog['comments'] = Comments.objects.filter(blog_id=blog['id']).order_by('-id')
+            blog['no_of_comments'] = len(blog['comments'])
+            blog['save']=False
+            if blog['id'] in saved_blogs:
+                blog['save'] = True
+        trending = Blogs.objects.exclude(user_name=request.user).order_by('-likes')[:5]
+    
+        return render(request,'index.html',{'blogs': d,'trending': trending})

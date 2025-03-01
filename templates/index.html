@@ -39,7 +39,7 @@
 
       <!-- Updated post card with comments section -->
       {% for blog in blogs %}
-      <div class="post-card">
+      <div id="post-card{{blog.id}}" class="post-card">
         <div class="post-header">
           <div class="post-meta">
             <strong style="font-size: 17px;">{{ blog.title }}</strong>
@@ -63,13 +63,13 @@
 
         {% if blog.content|length > 320 %}
         <p class="blog-para blog-para{{blog.id}}">{{ blog.content|linebreaksbr }}</p>
-        <a class="readmore" onclick="readmore('{{blog.id}}')">Read more...</a>
+        <a class="readmore readmore{{blog.id}}" onclick="readmore('{{blog.id}}')">Read more...</a>
         {% else %}
         <p class="blog-para blog-para{{blog.id}}" style="text-align: justify; height:auto">{{blog.content|linebreaksbr}}
         </p>
         {% endif %}
 
-        <div class="post-actions">
+        <div class="post-actions" style="position: relative;">
           <button id="likes{{blog.id}}" class="action-btn" onclick="blogLike('{{ blog.id }}')">
             {% if blog.liked %}
             ❤️
@@ -80,11 +80,20 @@
           </button>
           <button id="n-comments{{blog.id}}" class="action-btn comment-toggle">💬 Comment
             ({{blog.no_of_comments}})</button>
-          {% if blog.save == True %}
-          <button id="save{{blog.id}}" onclick="saveblog('{{blog.id}}')" class="action-btn" style="color: #0de300;">💾 Saved</button>
-          {% else %}
-          <button id="save{{blog.id}}" onclick="saveblog('{{blog.id}}')" class="action-btn">💾 Save</button>
-          {% endif %}
+
+          <button class="blogmenubtn action-btn" onclick="showMenu('{{blog.id}}')">More..</button>
+
+          <div id="blogbtns{{blog.id}}" class="blogbtns">
+            {% if blog.save == True %}
+            <button id="save{{blog.id}}" onclick="saveblog('{{blog.id}}')" class="action-btn" style="color: #0de300;">💾
+              Saved</button>
+            {% else %}
+            <button id="save{{blog.id}}" onclick="saveblog('{{blog.id}}')" class="action-btn">💾 Save</button>
+            {% endif %}
+            <button id="" onclick="shareBlog('{{blog.id}}','{{blog.title}}')" class="action-btn">↗️ Share</button>
+            <button id="" onclick="" class="action-btn">🚨 Report</button>
+          </div>
+
         </div>
         <div id="comments-section{{blog.id}}" class="comments-section">
           <div class="comment-input-container">

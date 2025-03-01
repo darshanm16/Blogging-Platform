@@ -29,6 +29,6 @@ urlpatterns = [
     
     path("logout/",views.logout_user,name="Logout"),
     path("writeblog/",views.writeblog,name="WriteBlog"),
-    path("contact/",views.contact,name="ContactUs"),
     
+    path("index/blog/<title>/<int:id>/",views.ananymousGetSharedblog,name="Get shared Blog"),  
 ]
