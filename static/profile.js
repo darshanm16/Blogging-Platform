@@ -1,3 +1,101 @@
+function changebyotp() {
+  var newpass = document.getElementById("newpass").value;
+  var confirmpass = document.getElementById("confirmpass").value;
+  if (!newpass || !confirmpass) {
+    alert("All fields are required.");
+    return;
+  }
+  if (newpass !== confirmpass) {
+    alert("Passwords do not match.");
+    return;
+  }
+  fetch("/profile/change-by-otp/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ newpass: newpass }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        location.reload();
+        alert("Password changed successfully.");
+      } else {
+        return response.json().then((data) => {
+          location.reload();
+          alert("Failed to change the password.");
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while changing the password.");
+    });
+}
+
+function verifyresetotp() {
+  var otp = document.getElementById("passotp").value;
+  if (!otp) {
+    alert("OTP is required.");
+    return;
+  }
+  fetch("/profile/verify-reset-otp/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ otp: otp }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        document.getElementById("byotp").remove();
+        document.getElementById("newpassinp").style.display = "block";
+        document
+          .getElementById("passchangebtn")
+          .setAttribute("onclick", "changebyotp()");
+      } else {
+        return response.json().then((data) => {
+          document.getElementById("otpmsg").textContent = "Invalid OTP.";
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while verifying OTP.");
+    });
+}
+
+function sendresetotp() {
+  document.getElementById("passotp").value = "";
+  document.getElementById("sendbtn").innerText = "Sending...";
+  fetch("/profile/send-reset-otp/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        document.getElementById("otpmsg").textContent =
+          "OTP sent please check your email.";
+        document.getElementById("passotp").focus();
+        document.getElementById("sendbtn").innerText = "Resend";
+        document
+          .getElementById("verifybtn")
+          .setAttribute("onclick", "verifyresetotp()");
+      } else {
+        return response.json().then((data) => {
+          document.getElementById("otpmsg").textContent = "Failed to send OTP.";
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      document.getElementById("otpmsg").textContent =
+        "An error occurred while sending OTP.";
+    });
+}
+
 function changebyoldpass() {
   var oldpass = document.getElementById("oldpass").value;
   var newpass = document.getElementById("newpass").value;
@@ -8,8 +106,18 @@ function changebyoldpass() {
     return;
   }
 
+  if (oldpass == newpass) {
+    alert("New password cannot be same as old password.");
+    document.getElementById("newpass").value = "";
+    document.getElementById("confirmpass").value = "";
+    document.getElementById("newpass").focus();
+    return;
+  }
+
   if (newpass !== confirmpass) {
     alert("Passwords do not match.");
+    document.getElementById("confirmpass").value = "";
+    document.getElementById("confirmpass").focus();
     return;
   }
   fetch("/profile/change-old-password/", {
@@ -46,16 +154,16 @@ function closechangepass() {
   document.getElementById("changepass").style.display = "none";
 }
 
-let byotp = `        <div class="form-group" id="byotp">
+let byotp = `<div class="form-group" id="byotp">
           <label for="passotp">OTP Verification</label>
           <div style="display: flex ;gap: 12px;">
-            <input type="passotp" id="passotp" name="passotp" maxlength="6" style="flex: 3;">
-            <button id="button" type="button" style="flex: 1;">Send otp</button>
-            <button id="button" type="button" style="flex: 1;background-color:#04aa6d">Verify</button>
+            <input type="passotp" id="passotp" name="passotp" maxlength="6" style="flex: 3;" required>
+            <button class="button" id="sendbtn" type="button" style="flex: 1;" onclick="sendresetotp()">Send</button>
+            <button class="button" id="verifybtn" type="button" style="flex: 1;background-color:#04aa6d">Verify</button>
           </div>
           <p id="otpmsg"></p>
         </div>`;
-let byoldpass = `        <div class="form-group" id="byoldpass">
+let byoldpass = `<div class="form-group" id="byoldpass">
           <label for="oldpass">Old Password</label>
           <input type="password" id="oldpass" name="oldpass">
         </div>`;
@@ -65,16 +173,16 @@ function changemethod() {
     document.getElementById("byotp").remove();
     document.getElementById("method").insertAdjacentHTML("afterend", byoldpass);
     document
-      .getElementsByClassName("passchangebtn")[0]
+      .getElementById("passchangebtn")
       .setAttribute("onclick", "changebyoldpass()");
+    document.getElementById("newpassinp").style.display = "block";
     return;
   }
   if (document.getElementById("byoldpass")) {
     document.getElementById("byoldpass").remove();
     document.getElementById("method").insertAdjacentHTML("afterend", byotp);
-    document
-      .getElementsByClassName("passchangebtn")[0]
-      .setAttribute("onclick", "changebyotp()");
+    document.getElementById("passchangebtn").removeAttribute("onclick");
+    document.getElementById("newpassinp").style.display = "None";
     return;
   }
 }

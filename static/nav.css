@@ -97,7 +97,7 @@ nav ul li a:hover {
   left: -60%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-end;
   width: 60%;
   height: 100vh;
   padding: 20% 0;

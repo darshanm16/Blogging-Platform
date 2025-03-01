@@ -462,6 +462,69 @@ def changeOldPassword(request):
             return JsonResponse({'message': 'Incorrect old password!'}, status=405)
     return redirect(profile)
 
+@csrf_exempt
+def sendResetOtp(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == "POST":
+        email = request.user.email
+        loginotp = random.randint(100000, 999999)
+        subject = 'Your Security Code for Password Reset'
+        message = f"""
+Dear {request.user.first_name},
+
+Your security code is: {loginotp}
+
+Please use this code to reset your password.
+
+Important Security Tips:
+- Do not share this code with anyone.
+- If you did not request this code, please contact our support team immediately.
+
+For any assistance, feel free to reach out to us at {EMAIL_HOST_USER}.
+
+Thank you,
+The Blogger Team
+"""
+        if not send_mail(
+            subject,
+            message,
+            EMAIL_HOST_USER,
+            [email],
+            fail_silently=True,
+        ):
+            return JsonResponse({'status': 'False'}, status=405)
+    request.session['loginotp'] = loginotp
+    return JsonResponse({'status': 'True'}, status=200)
+
+@csrf_exempt
+def verifyResetOtp(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == "POST":
+        data = json.loads(request.body)
+        form_otp = data.get('otp')
+        stored_otp=request.session.get('loginotp')
+        if form_otp and stored_otp and int(form_otp) == int(stored_otp):
+            del request.session['loginotp']
+            return JsonResponse({}, status=200)
+        else:
+            return JsonResponse({}, status=405)
+
+@csrf_exempt
+def changeByOtp(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method=="POST":
+        data = json.loads(request.body)
+        new_password = data.get('newpass')
+        user=User.objects.get(username=request.user)
+        user.set_password(new_password)
+        user.save()
+        login(request,user)
+        return JsonResponse({},status=200)
+    return redirect(profile)
+
 def writeblog(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)

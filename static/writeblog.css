@@ -10,7 +10,7 @@ main {
 .form-container {
   width: 90%;
   max-width: 600px;
-  margin: 20px auto;
+  margin: 0px auto;
   background: #fff;
   padding: 30px;
   border-radius: 12px;
@@ -23,6 +23,13 @@ h1,
   color: #444;
   font-size: 2rem;
 }
+
+@media (max-width: 500px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
 
 /* Labels */
 label {

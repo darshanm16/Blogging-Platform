@@ -23,7 +23,9 @@ urlpatterns = [
     path("profile/remove-saved-blog/",views.removeSavedBlog,name="Remove Blog"),
     path("profile/editprofile/",views.editProfile,name="Edit Profile"),
     path("profile/change-old-password/",views.changeOldPassword,name="Change Old Password"),
-    
+    path("profile/send-reset-otp/",views.sendResetOtp,name="Send Reset Otp"),
+    path("profile/verify-reset-otp/",views.verifyResetOtp,name="Verify Reset Password"),
+    path("profile/change-by-otp/",views.changeByOtp,name="Change By Otp"),
     
     path("logout/",views.logout_user,name="Logout"),
     path("writeblog/",views.writeblog,name="WriteBlog"),

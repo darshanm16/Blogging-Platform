@@ -314,8 +314,8 @@
         </div>
 
         <div style="display: flex ;gap: 12px;">
-          <button id="button" onclick="changemethod()" type="button">Change Method</button>
-          <button id="button" class="passchangebtn" onclick="changebyoldpass()" type="button">Submit</button>
+          <button class="button" onclick="changemethod()" type="button">Change Method</button>
+          <button class="button" id="passchangebtn" onclick="changebyoldpass()" type="button">Submit</button>
         </div>
       </form>
     </div>
@@ -329,61 +329,5 @@
 {% block js %}
 
 <script src="\static\profile.js"></script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const expertiseContainer = document.getElementById("expertiseContainer");
-    const selectedOptions = document.getElementById("selectedOptions");
-    const dropdown = document.getElementById("dropdown");
-    const searchInput = document.getElementById("searchExpertise");
-
-    expertiseContainer.addEventListener("click", function (event) {
-      dropdown.style.display = "block";
-      searchInput.focus();
-      event.stopPropagation();
-    });
-
-    document.addEventListener("click", function (event) {
-      if (!expertiseContainer.contains(event.target)) {
-        dropdown.style.display = "none";
-      }
-    });
-
-    dropdown.querySelectorAll("div[data-value]").forEach(option => {
-      option.addEventListener("click", function () {
-        const value = this.getAttribute("data-value");
-        if ([...selectedOptions.children].some(child => child.dataset.value === value)) return;
-
-        const span = document.createElement("span");
-        span.classList.add("selected-option");
-        span.dataset.value = value;
-        span.textContent = value;
-
-        const removeBtn = document.createElement("span");
-        removeBtn.classList.add("remove-option");
-        removeBtn.textContent = " ×";
-        removeBtn.onclick = function () {
-          selectedOptions.removeChild(span);
-        };
-
-        span.appendChild(removeBtn);
-        selectedOptions.appendChild(span);
-        dropdown.style.display = "none";
-      });
-    });
-
-    searchInput.addEventListener("input", function () {
-      const query = searchInput.value.toLowerCase();
-      dropdown.querySelectorAll("div[data-value]").forEach(option => {
-        option.style.display = option.textContent.toLowerCase().includes(query) ? "block" : "none";
-      });
-    });
-
-    document.getElementById("userForm").addEventListener("submit", function (event) {
-      event.preventDefault();
-      alert("Profile saved successfully!");
-    });
-  });
-</script>
 
 {% endblock js %}
