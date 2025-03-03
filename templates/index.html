@@ -95,6 +95,11 @@
           </div>
 
         </div>
+        {% if blog.blockcomments %}
+        <div id="comments-section{{blog.id}}" class="comments-section">
+          <h5 style="text-align: center;">Comments are disabled for this blog</h5>
+        </div>
+        {% else %}
         <div id="comments-section{{blog.id}}" class="comments-section">
           <div class="comment-input-container">
             <input type="text" id="comment-input{{blog.id}}" class="comment-input" placeholder="Write a comment...">
@@ -120,6 +125,7 @@
           </div>
           {% endfor %}
         </div>
+        {% endif %}
       </div>
       {% endfor %}
 

@@ -1,3 +1,43 @@
+function shareProfile(user_name) {
+  var url = window.location.origin + "/";
+  var blog_url = url + user_name + "/";
+  if (navigator.share) {
+    navigator
+      .share({
+        title: user_name,
+        text: "Check out this profile!",
+        url: blog_url,
+      })
+      .catch((error) => console.log("Error sharing:", error));
+  } else {
+    navigator.clipboard.writeText(blog_url);
+    alert("Link copied to clipboard!");
+  }
+}
+
+function blockComments(id) {
+  fetch("/profile/block-comments/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        location.reload();
+      } else {
+        return response.json().then((data) => {
+          alert(data.message || "Failed to block comments.");
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while blocking comments.");
+    });
+}
+
 function changebyotp() {
   var newpass = document.getElementById("newpass").value;
   var confirmpass = document.getElementById("confirmpass").value;
@@ -120,6 +160,7 @@ function changebyoldpass() {
     document.getElementById("confirmpass").focus();
     return;
   }
+  document.getElementById("passchangebtn").innerText = "Submitting...";
   fetch("/profile/change-old-password/", {
     method: "POST",
     headers: {

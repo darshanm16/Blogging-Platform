@@ -360,7 +360,7 @@ def profile(request):
         Details.objects.filter(user_name=request.user).update(saved=saved_blogs_id)
     details=Details.objects.filter(user_name=request.user).first()
 
-    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments, 'saved_blogs': saved_blogs,'details':details})
+    return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments, 'saved_blogs': saved_blogs,'details':details,'user':request.user})
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -533,6 +533,20 @@ def changeByOtp(request):
         return JsonResponse({},status=200)
     return redirect(profile)
 
+@csrf_exempt
+def blockComments(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        blog_id = data.get('id')
+        if not blog_id:
+            return JsonResponse({'error': 'Blog ID is required.'}, status=400)
+        blog = Blogs.objects.get(id=blog_id)
+        blog.blockcomments = not blog.blockcomments
+        blog.save()
+        return JsonResponse({'blockcomment': blog.blockcomments}, status=200)
+
 def writeblog(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)
@@ -613,3 +627,22 @@ def ananymousGetSharedblog(request,title,id):
         trending = Blogs.objects.exclude(user_name=request.user).order_by('-likes')[:5]
     
         return render(request,'index.html',{'blogs': d,'trending': trending})
+    
+def getProfile(request,user_name):
+    if user_name == request.user.username:
+        return redirect(profile)
+    if User.objects.filter(username=user_name).exists():
+        user=User.objects.get(username=user_name)
+        data=Blogs.objects.filter(user_name=user_name).values().order_by('-id')
+        total_likes = data.aggregate(Sum('likes'))['likes__sum']
+        serializer=BlogSerializer(data,many=True)
+        d=serializer.data
+        total_comments=0
+        for blog in d:
+            blog['date'] = datetime.strptime(blog['date'], '%Y-%m-%d').strftime('%b %d, %Y')
+            blog['comments'] = Comments.objects.filter(blog_id=blog['id']).order_by('-id')
+            blog['no_of_comments'] = len(blog['comments'])
+            total_comments+=blog['no_of_comments']
+        details=Details.objects.filter(user_name=user).first()
+        return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments, 'details':details,'user':user})
+    return HttpResponse('User not found!')

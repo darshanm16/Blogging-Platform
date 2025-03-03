@@ -26,9 +26,11 @@ urlpatterns = [
     path("profile/send-reset-otp/",views.sendResetOtp,name="Send Reset Otp"),
     path("profile/verify-reset-otp/",views.verifyResetOtp,name="Verify Reset Password"),
     path("profile/change-by-otp/",views.changeByOtp,name="Change By Otp"),
+    path("profile/block-comments/",views.blockComments,name="Block Comments"),
     
     path("logout/",views.logout_user,name="Logout"),
     path("writeblog/",views.writeblog,name="WriteBlog"),
     
-    path("index/blog/<title>/<int:id>/",views.ananymousGetSharedblog,name="Get shared Blog"),  
+    path("index/blog/<title>/<int:id>/",views.ananymousGetSharedblog,name="Get shared Blog"),
+    path("<user_name>/",views.getProfile,name="Get Profile"),
 ]

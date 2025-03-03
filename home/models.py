@@ -9,6 +9,7 @@ class Details(models.Model):
     about=models.TextField(max_length=1000,default='Tell me about yourself...')
     badges=models.JSONField(default=list)
     saved=models.JSONField(default=list)
+    public=models.BooleanField(default=True)
     
     def __str__(self):
         return self.user_name
@@ -20,6 +21,7 @@ class Blogs(models.Model):
     date =models.DateField()
     ananymous=models.BooleanField(default=False)
     likes=models.IntegerField(default=0)
+    blockcomments=models.BooleanField(default=False)
     
     def __str__(self):
         return self.user_name

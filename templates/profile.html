@@ -12,15 +12,20 @@
     <div class="post-menu" style="position: absolute; top: 30px; right: 30px;">
       <button class="post-menu-btn" aria-label="Post options">⋮</button>
       <div class="post-menu-content">
+        {% if request.user == user %}
         <div class="menu-item edit-profile-btn" onclick="editProfile()">
           Edit Profile
         </div>
         <div class="menu-item edit-profile-btn" onclick="">
           Make profile private
         </div>
+        <div class="menu-item edit-profile-btn" onclick="shareProfile('{{request.user}}')">
+          Share Profile
+        </div>
         <div class="menu-item edit-profile-btn" onclick="showchangepass()">
           Change Password
         </div>
+        {% endif %}
         <form action="/logout/" method="post" name="logout">
           {% csrf_token %}
           <div class="menu-item delete-confirm" onClick="document.forms['logout'].submit();">
@@ -90,10 +95,12 @@
         <div id="myblogshead" class="post-card blog-menu-item" onclick="showMyBlogs()" style="border: 1px solid black;">
           <h3 style="text-align: center; color:#1877f2; margin:0">My Blogs</h3>
         </div>
+        {% if request.user == user %}
         <div id="savedblogshead" class="post-card blog-menu-item" onclick="showSavedBlogs()"
           style="border:1px solid white">
           <h3 style="text-align: center; color:#1877f2; margin:0">Saved Blogs</h3>
         </div>
+        {% endif %}
       </div>
 
       <div id="myblogs" style="display: block;">
@@ -116,6 +123,7 @@
                 <span style="font-size: 13px;font-weight: 600;">{{ blog.date }}</span>
               </div>
             </div>
+            {% if request.user == user %}
             <div class="post-menu">
               <button class="post-menu-btn" aria-label="Post options">⋮</button>
               <div class="post-menu-content">
@@ -132,8 +140,16 @@
                   👽 Make ananymous
                   {% endif %}
                 </div>
+                <div class="menu-item" onclick="blockComments('{{blog.id}}')">
+                  {% if blog.blockcomments %}
+                  💬 Unable Comments
+                  {% else %}
+                  ❌ Disable Comments
+                  {% endif %}
+                </div>
               </div>
             </div>
+            {% endif %}
           </div>
 
           {% if blog.content|length > 303 %}
@@ -146,10 +162,17 @@
           <div class="post-actions">
             <button class="action-btn like-btn">❤️ {{blog.likes}} Likes</button>
             <button class="action-btn comment-toggle" onclick="showComments('{{blog.id}}')">💬 {{ blog.no_of_comments }}
-              Comments</button>
+              Comments
+              {% if blog.blockcomments %}
+              (off)
+              {% else %}
+              (on)
+              {% endif %}
+            </button>
           </div>
 
           {% if blog.comments %}
+          {% if request.user == user %}
           <div id="comments-section{{blog.id}}" class="comments-section">
             {% for comment in blog.comments %}
             <div id="comment{{comment.id}}" class="comment">
@@ -157,10 +180,32 @@
                 <strong>{{comment.user_name}}</strong><br>
 
                 <span style="display:content" id="comment-para{{comment.id}}">{{comment.comment}}</span><br>
-
-                {% if request.user.username == comment.user_name %}
+                {% if request.user == user %}
                 <div style="display: block;" id="comment-btns{{comment.id}}" class="comment-btns">
-                  <button class="comment-btn" onclick="editComment('{{comment.id}}')">Edit</button>
+                  <button class="comment-btn" style="background-color: #ff7474;"
+                    onclick="deleteComment('{{comment.id}}')">Delete</button>
+                </div>
+                {% endif %}
+
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          {% if blog.blockcomments %}
+          <div id="comments-section{{blog.id}}" class="comments-section">
+            <h5 style="text-align: center;">Comments are disabled for this blog!</h5>
+          </div>
+          {% else %}
+          <div id="comments-section{{blog.id}}" class="comments-section">
+            {% for comment in blog.comments %}
+            <div id="comment{{comment.id}}" class="comment">
+              <div class="comment-content">
+                <strong>{{comment.user_name}}</strong><br>
+
+                <span style="display:content" id="comment-para{{comment.id}}">{{comment.comment}}</span><br>
+                {% if request.user == user %}
+                <div style="display: block;" id="comment-btns{{comment.id}}" class="comment-btns">
                   <button class="comment-btn" style="background-color: #ff7474;"
                     onclick="deleteComment('{{comment.id}}')">Delete</button>
                 </div>
@@ -171,11 +216,14 @@
             {% endfor %}
           </div>
           {% endif %}
+          {% endif %}
+          {% endif %}
 
         </div>
         {% endfor %}
       </div>
 
+      {% if request.user == user %}
       <div id="savedblogs" style="display: none;">
         {% if not saved_blogs %}
         <div class="post-card">
@@ -228,9 +276,11 @@
         </div>
         {% endfor %}
       </div>
+      {% endif %}
 
     </main>
   </div>
+  {% if request.user == user %}
 
   <div class="edit-overlay">
     <div class="edit-modal">
@@ -320,6 +370,8 @@
       </form>
     </div>
   </div>
+
+  {% endif %}
 
 
 </body>
