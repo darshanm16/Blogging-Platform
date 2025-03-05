@@ -1,153 +1,155 @@
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-    margin: 0;
-    padding: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
-    font-size: 2.5rem;
-    color: #007bff;
-    margin-bottom: 20px;
+  font-size: 2.5rem;
+  color: #007bff;
+  margin-bottom: 20px;
 }
 
 .profile-info p {
-    font-size: 1.1rem;
-    margin: 10px 0;
+  font-size: 1.1rem;
+  margin: 10px 0;
 }
 
 .profile-info p strong {
-    color: #555;
+  color: #555;
 }
 
 .forms {
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
 }
 
 .forms button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
 .forms button[type="button"] {
-    background-color: #007bff;
-    color: #fff;
+  background-color: #007bff;
+  color: #fff;
 }
 
 .forms button[type="button"]:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 .forms button[type="submit"] {
-    background-color: #7d009f;
-    color: #fff;
+  background-color: #7d009f;
+  color: #fff;
 }
 
 .forms button[type="submit"]:hover {
-    background-color: #5a006f;
+  background-color: #5a006f;
 }
 
 .forms button[style*="background-color: #f44336"] {
-    background-color: #f44336;
-    color: #fff;
+  background-color: #f44336;
+  color: #fff;
 }
 
 .forms button[style*="background-color: #f44336"]:hover {
-    background-color: #d32f2f;
+  background-color: #d32f2f;
 }
 
 /* Blogs Section */
 h2 {
-    font-size: 2rem;
-    color: #007bff;
-    margin-top: 30px;
-    margin-bottom: 20px;
+  font-size: 2rem;
+  color: #007bff;
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 
-.blogs {
-    margin-top: 20px;
+.adminblogs {
+  display: none;
+  margin-top: 20px;
 }
 
 .blog-item {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .blog-item h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 10px;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
 }
 
 .blog-item small {
-    color: #777;
-    font-size: 0.9rem;
+  color: #777;
+  font-size: 0.9rem;
 }
 
 .blog-item p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
 }
 
 .blog-item button {
-    padding: 8px 16px;
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .blog-item button:hover {
-    background-color: #c82333;
+  background-color: #c82333;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
+  .container {
+    padding: 15px;
+  }
 
-    .header h1 {
-        font-size: 2rem;
-    }
+  .header h1 {
+    font-size: 2rem;
+  }
 
-    .forms {
-        flex-direction: column;
-    }
+  .forms {
+    flex-direction: column;
+  }
 
-    .forms button {
-        width: 100%;
-    }
+  .forms button {
+    width: 100%;
+  }
 
-    h2 {
-        font-size: 1.8rem;
-    }
+  h2 {
+    font-size: 1.8rem;
+  }
 
-    .blog-item h3 {
-        font-size: 1.3rem;
-    }
+  .blog-item h3 {
+    font-size: 1.3rem;
+  }
 }

@@ -16,6 +16,7 @@ urlpatterns = [
     path("index/blog/updateComment/",views.updateComment,name="Edit Comment"),
     path("index/blog/getBlog/",views.getBlog,name="Get Blog"),
     path("index/blog/saveblog/",views.saveBlog,name="Save Blog"),
+    path("index/blog/report-blog/",views.reportBlog,name="Report Blog"),
     
     path("profile/",views.profile,name="Profile"),
     path("profile/modify-blog/",views.modifyBlog,name="Delete Blog"),
@@ -27,10 +28,11 @@ urlpatterns = [
     path("profile/verify-reset-otp/",views.verifyResetOtp,name="Verify Reset Password"),
     path("profile/change-by-otp/",views.changeByOtp,name="Change By Otp"),
     path("profile/block-comments/",views.blockComments,name="Block Comments"),
+    path("profile/change-status/",views.changeStatus,name="Change Status"),
     
     path("logout/",views.logout_user,name="Logout"),
     path("writeblog/",views.writeblog,name="WriteBlog"),
     
-    path("index/blog/<title>/<int:id>/",views.ananymousGetSharedblog,name="Get shared Blog"),
+    path("blog/<title>/<int:id>/",views.ananymousGetSharedblog,name="Get shared Blog"),
     path("<user_name>/",views.getProfile,name="Get Profile"),
 ]

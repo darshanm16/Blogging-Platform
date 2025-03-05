@@ -252,7 +252,7 @@ h2 {
   border: none;
 }
 
-#edit-profile {
+#blog-box {
   position: fixed;
   top: 0;
   left: 0;
@@ -280,7 +280,7 @@ h2 {
   }
   .blogbtns {
     display: none;
-    gap: 5px; 
+    gap: 5px;
     flex-direction: column;
     position: absolute;
     bottom: 39px;
@@ -294,4 +294,9 @@ h2 {
     justify-content: center;
     background-color: white;
   }
+}
+
+#showcontent {
+  max-height: 70vh;
+  overflow: auto;
 }

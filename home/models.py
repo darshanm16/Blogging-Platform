@@ -22,10 +22,15 @@ class Blogs(models.Model):
     ananymous=models.BooleanField(default=False)
     likes=models.IntegerField(default=0)
     blockcomments=models.BooleanField(default=False)
-    
+    reported=models.IntegerField(default=0)
+  
     def __str__(self):
         return self.user_name
-    
+
+class Reports(models.Model):
+    blog_id=models.ImageField()
+    user_id=models.IntegerField()
+
 class Likes(models.Model):
     blog_id=models.IntegerField()
     user_name=models.CharField(max_length=100)

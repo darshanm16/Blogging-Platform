@@ -1,3 +1,26 @@
+function changeStatus() {
+  fetch("/profile/change-status/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status) {
+        alert("Profile status changed to public.");
+        document.getElementById("profile-status").textContent = "Profile Status : Public";
+      } else {
+        alert("Profile status changed to private.");
+        document.getElementById("profile-status").textContent = "Profile Status : Private";
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while changing the status.");
+    });
+}
+
 function shareProfile(user_name) {
   var url = window.location.origin + "/";
   var blog_url = url + user_name + "/";

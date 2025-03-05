@@ -1,3 +1,24 @@
+function reportblog(id) {
+  fetch("/index/blog/report-blog/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ blog_id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.report) {
+        alert("Already reported!");
+      } else {
+        alert("Blog reported");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
 function showMenu(id) {
   if (document.getElementById("blogbtns" + id).style.display === "flex") {
     document.getElementById("blogbtns" + id).style.display = "none";
@@ -7,7 +28,8 @@ function showMenu(id) {
 }
 
 function shareBlog(id, title, user_name) {
-  var url = window.location.href;
+  var url = window.location.origin + "/";
+  var blog_url = url + user_name + "/";
   title = title.replace(/ /g, "_");
   var blog_url = url + "blog/" + title + "/" + id + "/";
   if (navigator.share) {
@@ -64,11 +86,11 @@ function showBlog(id) {
     .catch((error) => {
       console.error("Error:", error);
     });
-  document.getElementById("edit-profile").style.display = "flex";
+  document.getElementById("blog-box").style.display = "flex";
 }
 
 function closeBlog() {
-  document.getElementById("edit-profile").style.display = "none";
+  document.getElementById("blog-box").style.display = "none";
 }
 
 function editComment(id) {
@@ -209,7 +231,7 @@ function blogLike(id) {
     .then((response) => response.json())
 
     .then((data) => {
-      const heartIcon = data.likes > 0 ? "❤️" : "🤍";
+      const heartIcon = data.status ? "❤️" : "🤍";
       document.getElementById(
         "likes" + id
       ).innerText = `${heartIcon} ${data.likes} likes`;

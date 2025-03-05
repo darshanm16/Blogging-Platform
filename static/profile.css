@@ -538,3 +538,15 @@ textarea {
   color: red;
   margin: 7px 0px;
 }
+
+#fullname {
+  display: flex;
+  gap: 16px;
+}
+
+#fullname > *:first-child {
+  flex: 1;
+}
+#fullname > *:nth-child(2) {
+  flex: 1;
+}

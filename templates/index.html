@@ -39,6 +39,7 @@
 
       <!-- Updated post card with comments section -->
       {% for blog in blogs %}
+      {% if blog.reported < 10 %}
       <div id="post-card{{blog.id}}" class="post-card">
         <div class="post-header">
           <div class="post-meta">
@@ -91,7 +92,7 @@
             <button id="save{{blog.id}}" onclick="saveblog('{{blog.id}}')" class="action-btn">💾 Save</button>
             {% endif %}
             <button id="" onclick="shareBlog('{{blog.id}}','{{blog.title}}')" class="action-btn">↗️ Share</button>
-            <button id="" onclick="" class="action-btn">🚨 Report</button>
+            <button id="" onclick="reportblog('{{blog.id}}')" class="action-btn">🚨 Report</button>
           </div>
 
         </div>
@@ -127,6 +128,7 @@
         </div>
         {% endif %}
       </div>
+      {% endif %}
       {% endfor %}
 
     </main>
@@ -145,7 +147,7 @@
     </aside>
   </div>
 
-  <div id="edit-profile">
+  <div id="blog-box">
     <div class="container">
       <div id="header">
         <h2 id="showtitle" style="margin: 0;"></h2>

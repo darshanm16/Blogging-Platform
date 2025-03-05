@@ -283,14 +283,14 @@ def updateLikes(request):
             blog = Blogs.objects.get(id=blog_id)
             blog.likes -= 1
             blog.save()
-            return JsonResponse({'likes':blog.likes}, status=200)
+            return JsonResponse({'likes':blog.likes,'status':False}, status=200)
         else:
             like = Likes(blog_id=blog_id, user_name=user_name)
             blog = Blogs.objects.get(id=blog_id)
             blog.likes += 1
             blog.save()
             like.save()
-            return JsonResponse({'likes':blog.likes}, status=200)
+            return JsonResponse({'likes':blog.likes,'status':True}, status=200)
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 @csrf_exempt
@@ -345,7 +345,8 @@ def profile(request):
         blog['no_of_comments'] = len(blog['comments'])
         total_comments+=blog['no_of_comments']
     if str(request.user)=="admin":
-        return render(request,'adminpage.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments})
+        reported_blogs = Blogs.objects.filter(reported__gt=0)
+        return render(request,'adminpage.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments,'reportedblogs':reported_blogs})
     saved_blogs_id = Details.objects.filter(user_name=request.user).first().saved
     saved_blogs = []
     not_found = []
@@ -375,10 +376,12 @@ def modifyBlog(request):
             blog_id = data.get('id')
             Likes.objects.filter(blog_id=blog_id).delete()
             Comments.objects.filter(blog_id=blog_id).delete()
+            Reports.objects.filter(blog_id=blog_id).delete()
             if not blog_id:
                 return JsonResponse({'error': 'Blog ID is required.'}, status=400)
             blog = Blogs.objects.get(id=blog_id)
             blog.delete()
+            
             messages.success(request, "Blog deleted Successfully!")
             return JsonResponse({'message': 'Blog deleted successfully.'}, status=200)
         
@@ -441,13 +444,22 @@ def editProfile(request):
             dob=Details.objects.filter(user_name=request.user).first().dob
         else:
             dob=request.POST.get('dob')
+        fname=request.POST.get('fname')
+        lname=request.POST.get('lname')
         role=request.POST.get('role')
         about=request.POST.get('about')
+        
         details = Details.objects.filter(user_name=request.user).first()
         details.dob = dob
         details.role = role
         details.about = about
         details.save()
+        
+        user = User.objects.get(username=request.user)
+        user.first_name = fname
+        user.last_name = lname
+        user.save()
+        
         messages.success(request, "Profile updated successfully!")
         return redirect(profile)
     return redirect(profile)
@@ -547,6 +559,19 @@ def blockComments(request):
         blog.save()
         return JsonResponse({'blockcomment': blog.blockcomments}, status=200)
 
+@csrf_exempt
+def changeStatus(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'POST':
+        details = Details.objects.filter(user_name=request.user).first()
+        details.public = not details.public
+        details.save()
+        if details.public:
+            return JsonResponse({'status': True}, status=200)
+        return JsonResponse({'status': False}, status=200)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
 def writeblog(request):
     if isinstance(request.user, AnonymousUser):
         return redirect(login_user)
@@ -629,6 +654,8 @@ def ananymousGetSharedblog(request,title,id):
         return render(request,'index.html',{'blogs': d,'trending': trending})
     
 def getProfile(request,user_name):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
     if user_name == request.user.username:
         return redirect(profile)
     if User.objects.filter(username=user_name).exists():
@@ -644,5 +671,24 @@ def getProfile(request,user_name):
             blog['no_of_comments'] = len(blog['comments'])
             total_comments+=blog['no_of_comments']
         details=Details.objects.filter(user_name=user).first()
+        if not details.public:
+            return HttpResponse('User has blocked public access to their profile!')
         return render(request,'profile.html',{'blogs': d,'total_likes':total_likes,'total_comments':total_comments, 'details':details,'user':user})
     return HttpResponse('User not found!')
+
+
+@csrf_exempt
+def reportBlog(request):
+    if isinstance(request.user, AnonymousUser):
+        return redirect(login_user)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        blog_id = data.get('blog_id')
+        if Reports.objects.filter(blog_id=blog_id,user_id=request.user.id).exists():
+            return JsonResponse({'report': True}, status=200)
+        Reports.objects.create(blog_id=blog_id, user_id=request.user.id)  
+        blog = Blogs.objects.get(id=blog_id)
+        blog.reported += 1
+        blog.save()        
+        return JsonResponse({'report': False}, status=200)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
