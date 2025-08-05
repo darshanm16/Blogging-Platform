@@ -55,8 +55,6 @@ Blogger is a modern, full-featured blogging platform that allows users to write,
 ### 👤 Profile Page  
 ![Profile Page](./screenshots/profile.png)
 
-*(Add these screenshots to a `/screenshots` folder in your repo)*
-
 ---
 
 ## 📌 Highlights
