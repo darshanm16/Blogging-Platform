@@ -76,8 +76,3 @@ Blogger is a modern, full-featured blogging platform that allows users to write,
 🐙 [GitHub Profile](https://github.com/yourusername)
 
 ---
-
-## Feel free to fork and extend!
-
----
-
